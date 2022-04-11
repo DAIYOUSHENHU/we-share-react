@@ -1,10 +1,10 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
+import 'antd/dist/antd.css'
 
-import BasicLayout from './layout/index';
+import App from './App'
 
 ReactDOM.render(
-    <BasicLayout />,
+    <App />,
   document.getElementById('root')
 );
 
