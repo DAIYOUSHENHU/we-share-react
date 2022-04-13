@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import "./index.css";
 import "antd/dist/antd.css";
 import { Layout, Menu } from "antd";
@@ -10,44 +10,54 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 const { Header, Sider, Content } = Layout;
-
-import Dashboard from "@/views/dashboard"
-import Askhelp from "@/views/ask-help/"
-import Offerhelp from "@/views/offer-help"
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 export default function index() {
   const [collapsed, setCollapsed] = useState(false);
-  const [itemKey, setItemKey] = useState("1");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  console.log(location);
+  const itemMap = {
+    "/layout/dashboard": "1",
+    "/layout/askhelp": "2",
+    "/layout/offerhelp": "3",
+  }
+
   const itemChanged = (props) => {
     console.log("itemchaged");
     console.log(props);
-    setItemKey(props)
+    navigate('/layout/'+props)
   };
   const toggleChanged = () => {
     console.log("toggleChanged");
     setCollapsed(!collapsed);
-    setItemKey("1")
   };
   return (
     <>
       <Layout>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="logo" />
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={[itemKey]}
-          >
-            <Menu.Item key="1" icon={<UserOutlined />} onClick={()=> itemChanged("1")}>
+          <Menu theme="dark" mode="inline" defaultSelectedKeys={[itemMap[location.pathname]]}>
+            <Menu.Item
+              key="1"
+              icon={<UserOutlined />}
+              onClick={() => itemChanged("dashboard")}
+            >
               首页
             </Menu.Item>
-            {/* <Menu.Item key="1" icon={<UserOutlined />} onClick={itemChangedTo1}>
-              首页
-            </Menu.Item> */}
-            <Menu.Item key="2" icon={<VideoCameraOutlined />} onClick={()=> itemChanged("2")}>
+            <Menu.Item
+              key="2"
+              icon={<VideoCameraOutlined />}
+              onClick={() => itemChanged("askhelp")}
+            >
               寻求帮助
             </Menu.Item>
-            <Menu.Item key="3" icon={<UploadOutlined />} onClick={()=> itemChanged("3")}>
+            <Menu.Item
+              key="3"
+              icon={<UploadOutlined />}
+              onClick={() => itemChanged("offerhelp")}
+            >
               提供帮助
             </Menu.Item>
           </Menu>
@@ -70,20 +80,11 @@ export default function index() {
               minHeight: 280,
             }}
           >
-            <MyContent itemKey={itemKey}></MyContent>
+            <Outlet />
           </Content>
         </Layout>
       </Layout>
     </>
   );
-}
-
-function MyContent(props) {
-  const keyMap = {
-    "1": <Dashboard></Dashboard>,
-    "2": <Askhelp></Askhelp>,
-    "3": <Offerhelp></Offerhelp>
-  }
-  return keyMap[props.itemKey]
 }
 
