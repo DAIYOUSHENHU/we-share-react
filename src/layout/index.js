@@ -6,8 +6,10 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined,
+  TeamOutlined,
   VideoCameraOutlined,
   UploadOutlined,
+  ApartmentOutlined,
 } from "@ant-design/icons";
 const { Header, Sider, Content } = Layout;
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
@@ -16,12 +18,12 @@ export default function index() {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
-  console.log(location);
+  
   const itemMap = {
     "/layout/dashboard": "1",
-    "/layout/askhelp": "2",
-    "/layout/offerhelp": "3",
+    "/layout/sharegood": "2",
+    "/layout/askhelp": "3",
+    "/layout/offerhelp": "4",
   }
 
   const itemChanged = (props) => {
@@ -41,24 +43,41 @@ export default function index() {
           <Menu theme="dark" mode="inline" defaultSelectedKeys={[itemMap[location.pathname]]}>
             <Menu.Item
               key="1"
-              icon={<UserOutlined />}
+              icon={<ApartmentOutlined />}
               onClick={() => itemChanged("dashboard")}
             >
               首页
             </Menu.Item>
             <Menu.Item
               key="2"
+              icon={<TeamOutlined />}
+              onClick={() => itemChanged("sharegood")}
+            >
+              共享物资
+            </Menu.Item>
+            <Menu.Item
+              key="3"
               icon={<VideoCameraOutlined />}
               onClick={() => itemChanged("askhelp")}
             >
               寻求帮助
             </Menu.Item>
             <Menu.Item
-              key="3"
+              key="4"
               icon={<UploadOutlined />}
               onClick={() => itemChanged("offerhelp")}
             >
               提供帮助
+            </Menu.Item>
+            {
+              
+            }
+            <Menu.Item
+              key="5"
+              icon={<UserOutlined />}
+              onClick={() => itemChanged("personal")}
+            >
+              个人中心
             </Menu.Item>
           </Menu>
         </Sider>
