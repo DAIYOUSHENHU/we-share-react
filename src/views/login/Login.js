@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Card, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { getToken, setToken } from "@/utils/auth";
+import { getToken, setToken, setRole } from "@/utils/auth";
 import { login } from "@/api/login";
 import "./Login.css";
 
@@ -28,6 +28,7 @@ export default function Login() {
           if (res.msg === "ok") {
             message.success("登录成功");
             setToken(res.token);
+            setRole(res.role);
             navigate("/layout/dashboard");
           } else {
             message.info(res.message);

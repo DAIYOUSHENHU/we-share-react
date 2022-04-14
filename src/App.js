@@ -30,6 +30,8 @@ export default function App() {
             <Route path="askhelp" element={<Askhelp />} />
             <Route path="offerhelp" element={<Offerhelp />} />
             <Route path="personal" element={<Personnal />} />
+            <Route path="managegood" element={<Personnal />} />
+            <Route path="managesys" element={<Personnal />} />
             <Route path="*" element={<Navigate to="/404" />} />
           </Route>
             

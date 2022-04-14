@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
 import "antd/dist/antd.css";
 import { Layout, Menu } from "antd";
@@ -13,23 +13,30 @@ import {
 } from "@ant-design/icons";
 const { Header, Sider, Content } = Layout;
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { getRole } from "@/utils/auth";
 
 export default function index() {
   const [collapsed, setCollapsed] = useState(false);
+  const [role, setRole] = useState(0);
+  useEffect(() => {
+    setRole(getRole());
+  });
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const itemMap = {
     "/layout/dashboard": "1",
     "/layout/sharegood": "2",
     "/layout/askhelp": "3",
     "/layout/offerhelp": "4",
-  }
+    "/layout/personal": "5",
+    "/layout/managegood": "6",
+  };
 
   const itemChanged = (props) => {
     console.log("itemchaged");
     console.log(props);
-    navigate('/layout/'+props)
+    navigate("/layout/" + props);
   };
   const toggleChanged = () => {
     console.log("toggleChanged");
@@ -40,7 +47,11 @@ export default function index() {
       <Layout>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="logo" />
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={[itemMap[location.pathname]]}>
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={[itemMap[location.pathname]]}
+          >
             <Menu.Item
               key="1"
               icon={<ApartmentOutlined />}
@@ -69,9 +80,6 @@ export default function index() {
             >
               提供帮助
             </Menu.Item>
-            {
-              
-            }
             <Menu.Item
               key="5"
               icon={<UserOutlined />}
@@ -79,6 +87,15 @@ export default function index() {
             >
               个人中心
             </Menu.Item>
+            {(role == 1 || role == 2) && (
+              <Menu.Item
+                key="6"
+                icon={<UserOutlined />}
+                onClick={() => itemChanged("managegood")}
+              >
+                物资管理
+              </Menu.Item>
+            )}
           </Menu>
         </Sider>
         <Layout className="site-layout">
@@ -106,4 +123,3 @@ export default function index() {
     </>
   );
 }
-

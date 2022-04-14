@@ -103,7 +103,7 @@ export default function Register() {
               htmlType="submit"
               className="login-form-button"
             >
-              注册
+              注册并登录
             </Button>
           </Form.Item>
         </Form>
