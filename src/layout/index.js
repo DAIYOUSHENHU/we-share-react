@@ -15,6 +15,8 @@ const { Header, Sider, Content } = Layout;
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { getRole } from "@/utils/auth";
 
+import logo from "@/assets/images/weshare-logo.png";
+
 export default function index() {
   const [collapsed, setCollapsed] = useState(false);
   const [role, setRole] = useState(0);
@@ -46,7 +48,9 @@ export default function index() {
     <>
       <Layout>
         <Sider trigger={null} collapsible collapsed={collapsed}>
-          <div className="logo" />
+          <div className="logo" >
+            <img src={logo} style={{height: '100%', width: '100%'}}></img>
+          </div>
           <Menu
             theme="dark"
             mode="inline"
@@ -87,13 +91,22 @@ export default function index() {
             >
               个人中心
             </Menu.Item>
-            {(role == 1 || role == 2) && (
+            {role == 1 && (
               <Menu.Item
                 key="6"
                 icon={<UserOutlined />}
                 onClick={() => itemChanged("managegood")}
               >
                 物资管理
+              </Menu.Item>
+            )}
+            {role == 2 && (
+              <Menu.Item
+                key="7"
+                icon={<UserOutlined />}
+                onClick={() => itemChanged("managesys")}
+              >
+                系统管理
               </Menu.Item>
             )}
           </Menu>
@@ -116,7 +129,10 @@ export default function index() {
               minHeight: 280,
             }}
           >
-            <Outlet />
+            <div className="outlet">
+              <Outlet />
+            </div>
+            
           </Content>
         </Layout>
       </Layout>

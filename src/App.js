@@ -10,6 +10,8 @@ import Sharegood from "@/views/share-good"
 import Askhelp from "@/views/ask-help/"
 import Offerhelp from "@/views/offer-help"
 import Personnal from "@/views/personal"
+import Goodmanage from "@/views/good-manage"
+import Sysmanage from "@/views/sys-manage"
 
 import PageNotFound from '@/views/error/404.js'
 
@@ -30,8 +32,8 @@ export default function App() {
             <Route path="askhelp" element={<Askhelp />} />
             <Route path="offerhelp" element={<Offerhelp />} />
             <Route path="personal" element={<Personnal />} />
-            <Route path="managegood" element={<Personnal />} />
-            <Route path="managesys" element={<Personnal />} />
+            <Route path="managegood" element={<Goodmanage />} />
+            <Route path="managesys" element={<Sysmanage />} />
             <Route path="*" element={<Navigate to="/404" />} />
           </Route>
             
