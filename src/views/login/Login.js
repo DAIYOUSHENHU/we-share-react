@@ -1,40 +1,32 @@
-// import { useNavigate } from 'react-router-dom'
-
-// export default function Login() {
-//   const navigate = useNavigate();
-//   const goLayoutHandler = () => {
-//     navigate('/layout')
-// }
-//   return (
-//     <>
-//     <div>Login</div>
-//     <p>这是登录页!  Login</p>
-//     <button onClick={goLayoutHandler}>登录</button>
-//     </>
-
-//   )
-// }
+import { useEffect } from 'react'
 
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Button, Checkbox, Card, message } from "antd";
+import { Form, Input, Button, Card, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { setToken } from "@/utils/auth";
-import { loginApi } from "@/api/login";
+import { getToken, setToken } from "@/utils/auth";
+import { login } from "@/api/login";
 import "./Login.css";
 
 export default function Login() {
   const navigate = useNavigate();
+  useEffect(() => {
+    let token =  getToken()
+    if (token == "login") {
+      navigate("/layout/dashboard")
+    }
+  })
+
   const onFinish = (values) => {
     if (values) {
-      loginApi({
-        userName: values.username,
-        password: values.password,
+      login({
+        "username": values.username,
+        "pwd": values.password,
       })
         .then((res) => {
-          if (res.code === "success") {
+          if (res.msg === "ok") {
             message.success("登录成功");
             setToken(res.token);
-            navigate("/admin");
+            navigate("/layout/dashboard");
           } else {
             message.info(res.message);
           }
@@ -87,11 +79,7 @@ export default function Login() {
             placeholder="密码"
           />
         </Form.Item>
-        <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>记住我</Checkbox>
-          </Form.Item>
-        </Form.Item>
+
         <Form.Item>
           <Button
             type="primary"

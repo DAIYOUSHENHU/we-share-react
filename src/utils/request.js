@@ -2,7 +2,7 @@ import axios from "axios";
 import { getToken } from "./auth";
 
 const instance = axios.create({
-  baseURL: "http://pvykc3.natappfree.cc:9632",
+  baseURL: process.env.BASE_API,
   timeout: 5000,
 });
 
@@ -35,39 +35,40 @@ instance.interceptors.response.use(
   }
 );
 
-/**
- * get请求
- * @param {*} url     请求地址
- * @param {*} params  url参数
- */
-export function get(url, params) {
-  return instance.get(url, {
-    params,
-  });
-}
+// /**
+//  * get请求
+//  * @param {*} url     请求地址
+//  * @param {*} params  url参数
+//  */
+// export function get(url, params) {
+//   return instance.get(url, {
+//     params,
+//   });
+// }
 
-/**
- * post请求
- * @param {*} url     请求地址
- * @param {*} data    数据
- */
-export function post(url, data) {
-  return instance.post(url, data);
-}
+// /**
+//  * post请求
+//  * @param {*} url     请求地址
+//  * @param {*} data    数据
+//  */
+// export function post(url, data) {
+//   return instance.post(url, data);
+// }
 
-/**
- * put请求
- * @param {*} url     请求地址
- * @param {*} data    数据
- */
-export function put(url, data) {
-  return instance.put(url, data);
-}
+// /**
+//  * put请求
+//  * @param {*} url     请求地址
+//  * @param {*} data    数据
+//  */
+// export function put(url, data) {
+//   return instance.put(url, data);
+// }
 
-/**
- * delete请求
- * @param {*} url   请求地址
- */
-export function del(url) {
-  return instance.delete(url);
-}
+// /**
+//  * delete请求
+//  * @param {*} url   请求地址
+//  */
+// export function del(url) {
+//   return instance.delete(url);
+// }
+export default instance

@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Card, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { setToken } from "@/utils/auth";
-import { loginApi } from "@/api/login";
+import { register } from "@/api/register";
 import "./Register.css";
 
 export default function Register() {
@@ -11,21 +10,20 @@ export default function Register() {
   const onFinish = (values) => {
     console.log(values);
     if (values) {
-      loginApi({
-        userName: values.username,
-        password: values.password,
+      register({
+        "username": values.username,
+        "pwd": values.password,
       })
         .then((res) => {
-          if (res.code === "success") {
-            message.success("登录成功");
-            setToken(res.token);
-            navigate("/admin");
+          if (res.msg === "ok") {
+            message.success("注册成功");
+            navigate("/login");
           } else {
-            message.info(res.message);
+            message.info("注册失败");
           }
         })
         .catch(() => {
-          message.error("用户不存在");
+          message.error("注册失败");
         });
     }
   };
