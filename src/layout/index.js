@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "./index.css";
+import "./index.less";
 import "antd/dist/antd.css";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Button } from "antd";
+const { SubMenu } = Menu;
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -13,7 +14,8 @@ import {
 } from "@ant-design/icons";
 const { Header, Sider, Content } = Layout;
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { getRole } from "@/utils/auth";
+import { getRole, clearToken } from "@/utils/auth";
+// import { getToken, setToken, setRole } from "@/utils/auth";
 
 import logo from "@/assets/images/weshare-logo.png";
 
@@ -44,12 +46,15 @@ export default function index() {
     console.log("toggleChanged");
     setCollapsed(!collapsed);
   };
+  const logout = () => {
+    clearToken();
+  };
   return (
     <>
       <Layout>
         <Sider trigger={null} collapsible collapsed={collapsed}>
-          <div className="logo" >
-            <img src={logo} style={{height: '100%', width: '100%'}}></img>
+          <div className="logo">
+            <img src={logo} style={{ height: "100%", width: "100%" }}></img>
           </div>
           <Menu
             theme="dark"
@@ -101,13 +106,21 @@ export default function index() {
               </Menu.Item>
             )}
             {role == 2 && (
-              <Menu.Item
-                key="7"
-                icon={<UserOutlined />}
-                onClick={() => itemChanged("managesys")}
-              >
-                系统管理
-              </Menu.Item>
+              <>
+                <Menu.Item
+                  key="7"
+                  icon={<UserOutlined />}
+                  onClick={() => itemChanged("managesys")}
+                >
+                  系统管理
+                </Menu.Item>
+                <SubMenu icon={<UserOutlined />} title="用户管理">
+                  <Menu.Item key="7-1">用户信息</Menu.Item>
+                  <Menu.Item key="7-2">option2</Menu.Item>
+                  <Menu.Item key="7-3">option3</Menu.Item>
+                  <Menu.Item key="7-4">option4</Menu.Item>
+                </SubMenu>
+              </>
             )}
           </Menu>
         </Sider>
@@ -120,19 +133,21 @@ export default function index() {
                 onClick: toggleChanged,
               }
             )}
+            <Button type="danger" className="logout" onClick={() => logout}>
+              退出登录
+            </Button>
           </Header>
           <Content
             className="site-layout-background"
             style={{
               margin: "24px 16px",
-              padding: 24,
+              padding: "24px 0 24px 24px",
               minHeight: 280,
             }}
           >
             <div className="outlet">
               <Outlet />
             </div>
-            
           </Content>
         </Layout>
       </Layout>

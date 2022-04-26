@@ -62,6 +62,24 @@ function index() {
       age: 42,
       address: "西湖区湖底公园1号",
     },
+    {
+      key: "10",
+      name: "胡彦祖",
+      age: 42,
+      address: "西湖区湖底公园1号",
+    },
+    {
+      key: "11",
+      name: "胡彦斌",
+      age: 32,
+      address: "西湖区湖底公园1号",
+    },
+    {
+      key: "12",
+      name: "胡彦祖",
+      age: 42,
+      address: "西湖区湖底公园1号",
+    },
   ];
 
   const columns = [

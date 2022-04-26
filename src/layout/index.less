@@ -22,4 +22,27 @@
 
 .outlet {
   height: 100%;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.1);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
 }
+
+.logout {
+  float: right;
+  margin-top: 16px;
+  margin-right: 16px;
+}
+
+
+
+

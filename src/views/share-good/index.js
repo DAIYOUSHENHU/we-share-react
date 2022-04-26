@@ -1,4 +1,4 @@
-import { Table, Input } from "antd";
+import { Table, Input, Space, Button } from "antd";
 const { Search } = Input;
 
 export default function index() {
@@ -19,19 +19,39 @@ export default function index() {
 
   const columns = [
     {
-      title: "姓名",
+      title: "物资名",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "年龄",
+      title: "描述",
       dataIndex: "age",
       key: "age",
+      width: '25%',
     },
     {
-      title: "住址",
-      dataIndex: "address",
-      key: "address",
+      title: "所属组织名",
+      dataIndex: "organName",
+      key: "organName",
+    },
+
+    {
+      title: "所属组织地址",
+      dataIndex: "organAddress",
+      key: "organAddress",
+      width: '25%',
+    },
+    {
+      title: "操作",
+      dataIndex: "options",
+      key: "options",
+      width: '12%',
+      render: () => (
+        <Space size="middle">
+          <Button>申请</Button>
+          <Button>详情</Button>
+        </Space>
+      ),
     },
   ];
   const onSearch = (value) => console.log(value);
