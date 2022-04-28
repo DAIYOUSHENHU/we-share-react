@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Table, Space, Button, Modal } from "antd";
 
 function index() {
-  const [visible, setVisible] = useState(false);
-  const [visibleDetails, setVisibleDetails] = useState(false);
+  const [visibleApprove, setVisibleApprove] = useState(false);
+  const [visibleReject, setVisibleReject] = useState(false);
   const dataSource = [
     {
       key: "1",
@@ -87,17 +87,17 @@ function index() {
 
   const columns = [
     {
-      title: "姓名",
+      title: "物资名",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "年龄",
+      title: "申请理由",
       dataIndex: "age",
       key: "age",
     },
     {
-      title: "住址",
+      title: "备注",
       dataIndex: "address",
       key: "address",
     },
@@ -108,47 +108,45 @@ function index() {
       width: "12%",
       render: () => (
         <Space size="middle">
-          <Button type="danger" onClick={showModal}>
-            禁用
+          <Button type="primary" onClick={showModalApprove}>
+            通过
           </Button>
-          <Button type="primary" onClick={showModalDetails}>
-            详情
-          </Button>
+          <Button onClick={showModalReject}>驳回</Button>
         </Space>
       ),
     },
   ];
-  const showModal = () => {
-    setVisible(true);
+  const showModalApprove = () => {
+    setVisibleApprove(true);
   };
-  const handleOk = () => {
+  const handleOkApprove = () => {
     setTimeout(() => {
-      setVisible(false);
+      setVisibleApprove(false);
     }, 2000);
   };
 
-  const handleCancel = () => {
-    setVisible(false);
+  const handleCancelApprove = () => {
+    setVisibleApprove(false);
   };
 
-  const showModalDetails = () => {
-    setVisibleDetails(true);
+  const showModalReject = () => {
+    setVisibleReject(true);
   };
-  const handleOkDetails = () => {
-    setVisibleDetails(false);
+  const handleOkReject = () => {
+    setVisibleReject(false);
   };
 
-  const handleCancelDetails = () => {
-    setVisibleDetails(false);
+  const handleCancelReject = () => {
+    setVisibleReject(false);
   };
   return (
     <>
       <Table dataSource={dataSource} columns={columns} />;
       <Modal
         title="提醒"
-        visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        visible={visibleApprove}
+        onOk={handleOkApprove}
+        onCancel={handleCancelApprove}
         okText="确认"
         cancelText="取消"
       >
@@ -156,13 +154,13 @@ function index() {
       </Modal>
       <Modal
         title="物资详情"
-        visible={visibleDetails}
-        onOk={handleOkDetails}
+        visible={visibleReject}
+        onOk={handleOkReject}
         okText="确认"
         cancelText="取消"
-        onCancel={handleCancelDetails}
+        onCancel={handleCancelReject}
         footer={[
-          <Button key="submit" type="primary" onClick={handleOkDetails}>
+          <Button key="submit" type="primary" onClick={handleOkReject}>
             确认
           </Button>,
         ]}

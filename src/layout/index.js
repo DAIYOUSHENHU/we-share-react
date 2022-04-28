@@ -35,6 +35,13 @@ export default function index() {
     "/layout/offerhelp": "4",
     "/layout/personal": "5",
     "/layout/managegood": "6",
+    "/layout/managegood/approvegood": "6-1",
+    "/layout/managegood/stategood": "6-2",
+    "/layout/managesys": "7",
+    "/layout/managesys/usermanage": "7-1",
+    "/layout/managesys/organmanage": "7-2",
+    "/layout/managesys/logmanage": "7-3",
+    "/layout/managesys/sysinfo": "7-4",
   };
 
   const itemChanged = (props) => {
@@ -97,30 +104,48 @@ export default function index() {
               个人中心
             </Menu.Item>
             {role == 1 && (
-              <Menu.Item
-                key="6"
-                icon={<UserOutlined />}
-                onClick={() => itemChanged("managegood")}
-              >
-                物资管理
-              </Menu.Item>
+              <SubMenu key="6" icon={<UserOutlined />} title="物资管理">
+                <Menu.Item
+                  key="6-1"
+                  onClick={() => itemChanged("managegood/approvegood")}
+                >
+                  物资审核
+                </Menu.Item>
+                <Menu.Item
+                  key="6-2"
+                  onClick={() => itemChanged("managegood/stategood")}
+                >
+                  物资状态管理
+                </Menu.Item>
+              </SubMenu>
             )}
             {role == 2 && (
-              <>
+              <SubMenu key="7" icon={<UserOutlined />} title="系统管理">
                 <Menu.Item
-                  key="7"
-                  icon={<UserOutlined />}
-                  onClick={() => itemChanged("managesys")}
+                  key="7-1"
+                  onClick={() => itemChanged("managesys/usermanage")}
                 >
-                  系统管理
+                  用户管理
                 </Menu.Item>
-                <SubMenu icon={<UserOutlined />} title="用户管理">
-                  <Menu.Item key="7-1">用户信息</Menu.Item>
-                  <Menu.Item key="7-2">option2</Menu.Item>
-                  <Menu.Item key="7-3">option3</Menu.Item>
-                  <Menu.Item key="7-4">option4</Menu.Item>
-                </SubMenu>
-              </>
+                <Menu.Item
+                  key="7-2"
+                  onClick={() => itemChanged("managesys/organmanage")}
+                >
+                  组织管理
+                </Menu.Item>
+                <Menu.Item
+                  key="7-3"
+                  onClick={() => itemChanged("managesys/logmanage")}
+                >
+                  日志管理
+                </Menu.Item>
+                <Menu.Item
+                  key="7-4"
+                  onClick={() => itemChanged("managesys/sysinfo")}
+                >
+                  系统信息
+                </Menu.Item>
+              </SubMenu>
             )}
           </Menu>
         </Sider>

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Form, Drawer, Button, Space, Table, Input } from "antd";
-import { GoldOutlined, PhoneOutlined } from "@ant-design/icons";
-const { Search, TextArea } = Input;
+import {} from "@ant-design/icons";
+import "./index.less";
+const { Search } = Input;
 
 export default function index() {
   const [visible, setVisible] = useState(false);
@@ -77,17 +78,17 @@ export default function index() {
 
   const columns = [
     {
-      title: "姓名",
+      title: "物资名",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "年龄",
+      title: "描述",
       dataIndex: "age",
       key: "age",
     },
     {
-      title: "住址",
+      title: "所属组织地址",
       dataIndex: "address",
       key: "address",
     },
@@ -118,18 +119,20 @@ export default function index() {
         width={500}
         onClose={onClose}
         visible={visible}
+        maskClosable={false}
         extra={
           <Space>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={onClose}>关闭</Button>
             <Button type="primary" onClick={onClose}>
-              OK
+              确认
             </Button>
           </Space>
         }
       >
-        <Form name="normal_login" onFinish={onFinish}>
+        <Form name="askHelpForm" onFinish={onFinish}>
           <Form.Item
             name="goodname"
+            label="物资名"
             rules={[
               {
                 required: true,
@@ -137,10 +140,11 @@ export default function index() {
               },
             ]}
           >
-            <Input prefix={<GoldOutlined />} type="text" placeholder="物资名" />
+            <Input type="text" placeholder="请输入物资名" />
           </Form.Item>
           <Form.Item
             name="phone"
+            label="联系电话"
             rules={[
               {
                 required: true,
@@ -148,15 +152,11 @@ export default function index() {
               },
             ]}
           >
-            <Input
-              prefix={<PhoneOutlined />}
-              type="text"
-              placeholder="联系电话"
-            />
+            <Input type="text" placeholder="请输入联系电话" />
           </Form.Item>
 
-          <Form.Item name="desc">
-            <TextArea type="string" placeholder="请填写说明" />
+          <Form.Item name="desc" label="描述">
+            <Input type="text" placeholder="请填写说明" />
           </Form.Item>
         </Form>
       </Drawer>
