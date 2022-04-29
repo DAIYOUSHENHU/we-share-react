@@ -10,69 +10,17 @@ export default function index() {
   const dataSource = [
     {
       key: "1",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
+      name: "风扇",
+      desc: "便携小风扇",
+      organ_name: "四川师范大学成龙校区东苑1栋",
+      organ_address: "四川师范大学成龙校区东苑1栋",
     },
     {
       key: "2",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "3",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "4",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "5",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "6",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "7",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "8",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "9",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "10",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "11",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
+      name: "饮用水",
+      desc: "22年4月产的一箱农夫山泉矿泉水",
+      organ_name: "四川师范大学成龙校区东苑1栋",
+      organ_address: "四川师范大学成龙校区东苑1栋",
     },
   ];
 
@@ -84,13 +32,13 @@ export default function index() {
     },
     {
       title: "描述",
-      dataIndex: "age",
-      key: "age",
+      dataIndex: "desc",
+      key: "desc",
     },
     {
       title: "所属组织地址",
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "organ_address",
+      key: "organ_address",
     },
   ];
   const showDrawer = () => {
@@ -142,6 +90,9 @@ export default function index() {
           >
             <Input type="text" placeholder="请输入物资名" />
           </Form.Item>
+          <Form.Item name="desc" label="描述">
+            <Input type="text" placeholder="请填写说明" />
+          </Form.Item>
           <Form.Item
             name="phone"
             label="联系电话"
@@ -154,9 +105,17 @@ export default function index() {
           >
             <Input type="text" placeholder="请输入联系电话" />
           </Form.Item>
-
-          <Form.Item name="desc" label="描述">
-            <Input type="text" placeholder="请填写说明" />
+          <Form.Item
+            name="address"
+            label="地址"
+            rules={[
+              {
+                required: true,
+                message: "请输入地址!",
+              },
+            ]}
+          >
+            <Input type="text" placeholder="请输入地址" />
           </Form.Item>
         </Form>
       </Drawer>

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Table, Space, Button, Modal } from "antd";
+import { Table, Space, Button, Modal, Input } from "antd";
+const { Search } = Input;
 
 function index() {
   const [visible, setVisible] = useState(false);
@@ -7,99 +8,72 @@ function index() {
   const dataSource = [
     {
       key: "1",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
+      good_name: "风扇",
+      desc: "便携小风扇",
+      use_state: "未使用",
+      owner_name: "user1",
+      owner_phone: "18018018010",
+      user_name: "",
+      user_phone: "",
     },
     {
       key: "2",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
+      good_name: "饮用水",
+      desc: "	22年4月产的一箱农夫山泉矿泉水",
+      use_state: "未使用",
+      owner_name: "user1",
+      owner_phone: "18018018010",
+      user_name: "",
+      user_phone: "",
     },
     {
       key: "3",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "4",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "5",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "6",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "1",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "7",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "8",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "9",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "10",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "11",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "12",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
+      good_name: "充电宝",
+      desc: "一个充电宝",
+      use_state: "使用中",
+      owner_name: "user1",
+      owner_phone: "18018018010",
+      user_name: "test1",
+      user_phone: "18180186069",
     },
   ];
 
   const columns = [
     {
-      title: "姓名",
-      dataIndex: "name",
+      title: "物资名",
+      dataIndex: "good_name",
       key: "name",
     },
     {
-      title: "年龄",
-      dataIndex: "age",
-      key: "age",
+      title: "描述",
+      dataIndex: "desc",
+      key: "desc",
     },
     {
-      title: "住址",
-      dataIndex: "address",
-      key: "address",
+      title: "使用状态",
+      dataIndex: "use_state",
+      key: "use_state",
+    },
+    {
+      title: "提供者姓名",
+      dataIndex: "owner_name",
+      key: "owner_name",
+    },
+    {
+      title: "提供者联系电话",
+      dataIndex: "owner_phone",
+      key: "owner_phone",
+    },
+
+    {
+      title: "使用者姓名",
+      dataIndex: "user_name",
+      key: "user_name",
+    },
+    {
+      title: "使用者联系电话",
+      dataIndex: "user_phone",
+      key: "user_phone",
     },
     {
       title: "操作",
@@ -118,6 +92,7 @@ function index() {
       ),
     },
   ];
+  const onSearch = (value) => console.log(value);
   const showModal = () => {
     setVisible(true);
   };
@@ -143,6 +118,12 @@ function index() {
   };
   return (
     <>
+      <Search
+        placeholder="按组织名查找"
+        onSearch={onSearch}
+        enterButton
+        style={{ width: 304, marginBottom: 20 }}
+      />
       <Table dataSource={dataSource} columns={columns} />;
       <Modal
         title="提醒"
@@ -153,6 +134,7 @@ function index() {
         cancelText="取消"
       >
         <p>确认禁用此物资吗？</p>
+        <p>禁用后，其他用户将不能查看到此物资信息</p>
       </Modal>
       <Modal
         title="物资详情"
@@ -167,7 +149,33 @@ function index() {
           </Button>,
         ]}
       >
-        <p>物资详情</p>
+        <p>
+          物资名：<span>充电宝</span>
+        </p>
+        <p>
+          描述：<span>一个充电宝</span>
+        </p>
+        <p>
+          状态：<span>使用中</span>
+        </p>
+        <p>
+          提供者姓名：<span>user1</span>
+        </p>
+        <p>
+          提供者联系电话：<span>18018018010</span>
+        </p>
+        <p>
+          物资加入组织时间：<span>2022-04-15 21:04:01</span>
+        </p>
+        <p>
+          使用者姓名：<span>test1</span>
+        </p>
+        <p>
+          使用者联系电话：<span>18180186069</span>
+        </p>
+        <p>
+          开始使用时间：<span>2022-04-16 10:35:31</span>
+        </p>
       </Modal>
     </>
   );

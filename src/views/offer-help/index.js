@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Form, Drawer, Button, Space, Table, Input } from "antd";
+import { Form, Drawer, Button, Space, Table, Input, Select } from "antd";
+const { Option } = Select;
 import {} from "@ant-design/icons";
 const { Search } = Input;
 
@@ -9,69 +10,17 @@ export default function index() {
   const dataSource = [
     {
       key: "1",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
+      name: "书",
+      desc: "科幻书籍",
+      phone: "18018018010",
+      address: "川师成龙校区",
     },
     {
       key: "2",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "3",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "4",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "5",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "6",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "7",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "8",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "9",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "10",
-      name: "胡彦斌",
-      age: 32,
-      address: "西湖区湖底公园1号",
-    },
-    {
-      key: "11",
-      name: "胡彦祖",
-      age: 42,
-      address: "西湖区湖底公园1号",
+      name: "伞",
+      desc: "一把伞",
+      phone: "18018018010",
+      address: "川师成龙",
     },
   ];
 
@@ -83,25 +32,40 @@ export default function index() {
     },
     {
       title: "描述",
-      dataIndex: "age",
-      key: "age",
+      dataIndex: "desc",
+      key: "desc",
     },
     {
-      title: "所属组织地址",
+      title: "联系电话",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "地址",
       dataIndex: "address",
       key: "address",
     },
   ];
+  const onSearch = (value) => console.log(value);
+
   const showDrawer = () => {
     setVisible(true);
   };
   const onClose = () => {
     setVisible(false);
   };
-  const onSearch = (value) => console.log(value);
   const onFinish = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
+  function onChange(value) {
+    console.log(`selected ${value}`);
+  }
+  
+  function onSearchOrgan(val) {
+    console.log('search:', val);
+  }
+
   return (
     <div>
       <Button onClick={showDrawer}>提供物资</Button>
@@ -118,6 +82,7 @@ export default function index() {
         width={500}
         onClose={onClose}
         visible={visible}
+        maskClosable={false}
         extra={
           <Space>
             <Button onClick={onClose}>关闭</Button>
@@ -127,10 +92,7 @@ export default function index() {
           </Space>
         }
       >
-        <Form
-          name="offerHelpForm"
-          onFinish={onFinish}
-        >
+        <Form name="offerHelpForm" onFinish={onFinish}>
           <Form.Item
             name="goodname"
             label="物资名"
@@ -142,6 +104,9 @@ export default function index() {
             ]}
           >
             <Input type="text" placeholder="请输入物资名" />
+          </Form.Item>
+          <Form.Item name="desc" label="描述">
+            <Input type="text" placeholder="请填写说明" />
           </Form.Item>
           <Form.Item
             name="phone"
@@ -155,9 +120,28 @@ export default function index() {
           >
             <Input type="text" placeholder="请输入联系电话" />
           </Form.Item>
-
-          <Form.Item name="desc" label="描述">
-            <Input type="text" placeholder="请填写说明" />
+          <Form.Item
+            name="choose_organ"
+            label="托管组织"
+            rules={[
+              {
+                required: true,
+                message: "请选择托管组织",
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder="请选择物资托管组织"
+              optionFilterProp="children"
+              onChange={onChange}
+              onSearch={onSearchOrgan}
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              <Option value="四川师范大学成龙校区东苑1栋">四川师范大学成龙校区东苑1栋</Option>
+            </Select>
           </Form.Item>
         </Form>
       </Drawer>

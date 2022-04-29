@@ -41,6 +41,7 @@ export default function App() {
               <Route path="stategood" element={<GoodState />} />
             </Route>
             <Route path="managesys">
+              <Route path="" element={<Navigate to="../usermanage" />} />
               <Route path="usermanage" element={<Usermanage />} />
               <Route path="organmanage" element={<Organmanage />} />
               <Route path="logmanage" element={<Logmanage />} />

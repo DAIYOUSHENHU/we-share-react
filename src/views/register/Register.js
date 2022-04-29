@@ -58,13 +58,13 @@ export default function Register() {
             rules={[
               {
                 required: true,
-                message: "请输入用户名!",
+                message: "请输入账号!",
               },
             ]}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="用户名"
+              placeholder="账号"
             />
           </Form.Item>
           <Form.Item
