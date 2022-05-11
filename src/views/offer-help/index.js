@@ -1,34 +1,76 @@
-import { useState } from "react";
-import { Form, Drawer, Button, Space, Table, Input, Select } from "antd";
+import { useState, useEffect } from "react";
+import {
+  Form,
+  Drawer,
+  Button,
+  Space,
+  Table,
+  Input,
+  Select,
+  message,
+} from "antd";
 const { Option } = Select;
 import {} from "@ant-design/icons";
 const { Search } = Input;
-
+import { getAskhelp } from "@/api/askhelp";
+import { getUserInfo } from "@/utils/auth";
+import { getOrganApproved } from "@/api/organ";
+import { addShareGood } from "@/api/good";
 export default function index() {
   const [visible, setVisible] = useState(false);
+  const [dataSource, setDataSource] = useState([]);
+  const [organs, setOrgans] = useState([]);
+  // const [organs, setOrgans] = useState();
 
-  const dataSource = [
-    {
-      key: "1",
-      name: "书",
-      desc: "科幻书籍",
-      phone: "18018018010",
-      address: "川师成龙校区",
-    },
-    {
-      key: "2",
-      name: "伞",
-      desc: "一把伞",
-      phone: "18018018010",
-      address: "川师成龙",
-    },
-  ];
+  useEffect(() => {
+    getAskhelp({}).then((res) => {
+      let askhelp = JSON.parse(res.data);
+      for (let i = 0; i < askhelp.length; i++) {
+        askhelp[i].key = String(i + 1);
+      }
+      setDataSource(askhelp);
+    });
+    getOrganApproved({}).then((res) => {
+      console.log(res);
+      let getOrgans = JSON.parse(res.data);
+      for (let i = 0; i < getOrgans.length; i++) {
+        getOrgans[i].key = String(i + 1);
+        getOrgans[i].value = getOrgans[i].id;
+        getOrgans[i].text = getOrgans[i].organname;
+      }
+      console.log(getOrgans);
+      setOrgans(getOrgans);
+    });
+  }, []);
+  const [form] = Form.useForm();
+  let userInfo = getUserInfo();
+  // 转换成json对象
+  userInfo = JSON.parse(userInfo);
+  console.log(userInfo);
+  console.log(organs);
+  const options = organs.map((d) => <Option key={d.value}>{d.text}</Option>);
+  // const dataSource = [
+  //   {
+  //     key: "1",
+  //     name: "书",
+  //     desc: "科幻书籍",
+  //     phone: "18018018010",
+  //     address: "川师成龙校区",
+  //   },
+  //   {
+  //     key: "2",
+  //     name: "伞",
+  //     desc: "一把伞",
+  //     phone: "18018018010",
+  //     address: "川师成龙",
+  //   },
+  // ];
 
   const columns = [
     {
       title: "物资名",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "goodname",
+      key: "goodname",
     },
     {
       title: "描述",
@@ -37,13 +79,13 @@ export default function index() {
     },
     {
       title: "联系电话",
-      dataIndex: "phone",
-      key: "phone",
+      dataIndex: "userphone",
+      key: "userphone",
     },
     {
       title: "地址",
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "usersddress",
+      key: "usersddress",
     },
   ];
   const onSearch = (value) => console.log(value);
@@ -54,16 +96,40 @@ export default function index() {
   const onClose = () => {
     setVisible(false);
   };
-  const onFinish = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+  const onFinish = () => {
+    form
+      .validateFields()
+      .then(() => {
+        let good = form.getFieldsValue();
+        console.log(good);
+        addShareGood({
+          userid: userInfo.id,
+          ...good,
+          organid: Number(good.organid)
+        })
+          .then((res) => {
+            if (res.msg === "ok") {
+              message.success("提交成功");
+            } else {
+              message.info(res.message);
+            }
+          })
+          .catch(() => {
+            message.error("提交失败");
+          });
+        setVisible(false);
+      })
+      .catch((errorInfo) => {
+        console.log("Failed:", errorInfo);
+      });
   };
 
   function onChange(value) {
     console.log(`selected ${value}`);
   }
-  
+
   function onSearchOrgan(val) {
-    console.log('search:', val);
+    console.log("search:", val);
   }
 
   return (
@@ -86,13 +152,18 @@ export default function index() {
         extra={
           <Space>
             <Button onClick={onClose}>关闭</Button>
-            <Button type="primary" onClick={onClose}>
+            <Button type="primary" onClick={onFinish}>
               确认
             </Button>
           </Space>
         }
       >
-        <Form name="offerHelpForm" onFinish={onFinish}>
+        <Form
+          form={form}
+          name="offerHelpForm"
+          onFinish={onFinish}
+          preserve={false}
+        >
           <Form.Item
             name="goodname"
             label="物资名"
@@ -109,7 +180,7 @@ export default function index() {
             <Input type="text" placeholder="请填写说明" />
           </Form.Item>
           <Form.Item
-            name="phone"
+            name="userphone"
             label="联系电话"
             rules={[
               {
@@ -121,7 +192,7 @@ export default function index() {
             <Input type="text" placeholder="请输入联系电话" />
           </Form.Item>
           <Form.Item
-            name="choose_organ"
+            name="organid"
             label="托管组织"
             rules={[
               {
@@ -140,7 +211,7 @@ export default function index() {
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              <Option value="四川师范大学成龙校区东苑1栋">四川师范大学成龙校区东苑1栋</Option>
+              {options}
             </Select>
           </Form.Item>
         </Form>

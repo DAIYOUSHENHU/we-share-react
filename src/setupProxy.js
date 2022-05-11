@@ -17,6 +17,14 @@ module.exports = function (app) {
         "^/organ": "/organ",
       },
       secure: false
+    }),
+    createProxyMiddleware('/good', {
+      target: 'http://47.96.77.64:9632',
+      changeOrigin: true,
+      pathRewrite: {
+        "^/good": "/good",
+      },
+      secure: false
     })
   );
 };

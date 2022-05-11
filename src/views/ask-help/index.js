@@ -1,11 +1,21 @@
-import { useState } from "react";
-import { Form, Drawer, Button, Space, Table, Input } from "antd";
+import { useState, useEffect } from "react";
+import { Form, Drawer, Button, Space, Table, Input, message } from "antd";
 import {} from "@ant-design/icons";
-import "./index.less";
 const { Search } = Input;
+import "./index.less";
+import { getUserInfo } from "@/utils/auth";
+import { addAskhelp } from "@/api/askhelp";
 
 export default function index() {
   const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    form.resetFields();
+  });
+  const [form] = Form.useForm();
+
+  let userInfo = getUserInfo();
+  // 转换成json对象
+  userInfo = JSON.parse(userInfo);
 
   const dataSource = [
     {
@@ -45,11 +55,36 @@ export default function index() {
     setVisible(true);
   };
   const onClose = () => {
+    form.resetFields();
     setVisible(false);
   };
   const onSearch = (value) => console.log(value);
-  const onFinish = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+  const onFinish = () => {
+    console.log(form.getFieldsValue());
+    form
+      .validateFields()
+      .then(() => {
+        let askhelpInfo = form.getFieldsValue();
+        console.log(askhelpInfo);
+        addAskhelp({
+          userid: userInfo.id,
+          ...askhelpInfo,
+        })
+          .then((res) => {
+            if (res.msg === "ok") {
+              message.success("提交成功");
+            } else {
+              message.info(res.message);
+            }
+          })
+          .catch(() => {
+            message.error("提交失败");
+          });
+        setVisible(false);
+      })
+      .catch((errorInfo) => {
+        console.log("Failed:", errorInfo);
+      });
   };
   return (
     <div>
@@ -71,13 +106,13 @@ export default function index() {
         extra={
           <Space>
             <Button onClick={onClose}>关闭</Button>
-            <Button type="primary" onClick={onClose}>
+            <Button type="primary" onClick={onFinish}>
               确认
             </Button>
           </Space>
         }
       >
-        <Form name="askHelpForm" onFinish={onFinish}>
+        <Form name="askHelpForm" form={form} preserve={false}>
           <Form.Item
             name="goodname"
             label="物资名"
@@ -94,7 +129,7 @@ export default function index() {
             <Input type="text" placeholder="请填写说明" />
           </Form.Item>
           <Form.Item
-            name="phone"
+            name="userphone"
             label="联系电话"
             rules={[
               {
@@ -106,7 +141,7 @@ export default function index() {
             <Input type="text" placeholder="请输入联系电话" />
           </Form.Item>
           <Form.Item
-            name="address"
+            name="usersddress"
             label="地址"
             rules={[
               {

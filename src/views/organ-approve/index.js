@@ -9,14 +9,6 @@ function index() {
   const [visibleReject, setVisibleReject] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [select, setSelect] = useState({});
-  // useEffect( () => {
-  //   const dataSource = await getOrganApproveing({
-  //     organname: "",
-  //   })
-  //   console.log(dataSource);
-  //   let organ = JSON.parse(dataSource.data)
-  //   setDataSource(organ)
-  // },[]);
   useEffect(() => {
     getOrganApproveing({
       organname: "",

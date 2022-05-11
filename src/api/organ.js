@@ -16,6 +16,14 @@ export function getOrganApproveing(data) {
   })
 }
 
+export function getOrganApproved(data) {
+  return request({
+    url: '/organ/getOrganApproved',
+    method: 'post',
+    data
+  })
+}
+
 export function acceptOrgan(data) {
   return request({
     url: '/organ/acceptOrgan',
