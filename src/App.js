@@ -14,6 +14,7 @@ import GoodApprove from "@/views/good-approve";
 import GoodState from "@/views/good-manage";
 import SysInfo from "@/views/sys-info";
 import Usermanage from "@/views/user-manage";
+import OrganApprove from "@/views/organ-approve";
 import Organmanage from "@/views/organ-manage";
 import Logmanage from "@/views/log-manage";
 
@@ -43,7 +44,10 @@ export default function App() {
             <Route path="managesys">
               <Route path="" element={<Navigate to="../usermanage" />} />
               <Route path="usermanage" element={<Usermanage />} />
-              <Route path="organmanage" element={<Organmanage />} />
+              <Route path="organmanage">
+                <Route path="approveorgan" element={<OrganApprove />} />
+                <Route path="stateorgan" element={<Organmanage />} />
+              </Route>
               <Route path="logmanage" element={<Logmanage />} />
               <Route path="sysinfo" element={<SysInfo />} />
             </Route>

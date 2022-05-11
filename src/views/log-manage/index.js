@@ -1,88 +1,172 @@
 import { useState } from "react";
-import { Table, Space, Button, Modal, Input } from "antd";
+import { DatePicker, Table, Space, Button, Modal, Input } from "antd";
 const { Search } = Input;
+const { RangePicker } = DatePicker;
+
+import "moment/locale/zh-cn";
+import locale from "antd/es/date-picker/locale/zh_CN";
 
 function index() {
   const [visibleDetails, setVisibleDetails] = useState(false);
   const dataSource = [
     {
       key: "1",
-      good_name: "风扇",
-      desc: "便携小风扇",
-      use_state: "未使用",
-      owner_name: "user1",
-      owner_phone: "18018018010",
-      user_name: "",
-      user_phone: "",
+      name: "admin",
+      role: "管理员",
+      desc: "跳转到日志管理页面",
+      create_time: "2022-04-16 20:24:21",
+      url: "/layout/managesys/logmanage",
+      req_type: "POST",
+      req_data: '{"token": "login","role": "2"}',
     },
     {
       key: "2",
-      good_name: "饮用水",
-      desc: "	22年4月产的一箱农夫山泉矿泉水",
-      use_state: "未使用",
-      owner_name: "user1",
-      owner_phone: "18018018010",
-      user_name: "",
-      user_phone: "",
+      name: "admin",
+      role: "管理员",
+      desc: "跳转到首页",
+      create_time: "2022-04-16 20:24:12",
+      url: "/layout/dashboard",
+      req_type: "POST",
+      req_data: '{"token": "login","role": "2"}',
     },
     {
       key: "3",
-      good_name: "充电宝",
-      desc: "一个充电宝",
-      use_state: "使用中",
-      owner_name: "user1",
-      owner_phone: "18018018010",
-      user_name: "test1",
-      user_phone: "18180186069",
+      name: "admin",
+      role: "管理员",
+      desc: "登录系统",
+      create_time: "2022-04-16 20:24:12",
+      url: "/login",
+      req_type: "POST",
+      req_data: '{"user_name": "admin","pwd": "******"}',
     },
+    {
+      key: "4",
+      name: "admin",
+      role: "管理员",
+      desc: "管理员下线",
+      create_time: "2022-04-16 20:24:21",
+      url: "/logout",
+      req_type: "POST",
+      req_data: '{"token": "login","role": "2"}',
+    },
+    {
+      key: "5",
+      name: "admin",
+      role: "管理员",
+      desc: "跳转到组织管理页面",
+      create_time: "2022-04-16 20:24:21",
+      url: "/layout/managesys/organmanage",
+      req_type: "POST",
+      req_data: '{"token": "login","role": "2"}',
+    },
+    {
+      key: "6",
+      name: "admin",
+      role: "管理员",
+      desc: "跳转到用户管理页面",
+      create_time: "2022-04-16 20:24:21",
+      url: "/layout/managesys/usermanage",
+      req_type: "POST",
+      req_data: '{"token": "login","role": "2"}',
+    },
+    {
+      key: "7",
+      name: "admin",
+      role: "管理员",
+      desc: "跳转到用户管理页面",
+      create_time: "2022-04-16 20:24:21",
+      url: "/layout/managesys/usermanage",
+      req_type: "POST",
+      req_data: '{"token": "login","role": "2"}',
+    },
+    {
+      key: "8",
+      name: "admin",
+      role: "管理员",
+      desc: "跳转到用户管理页面",
+      create_time: "2022-04-16 20:24:21",
+      url: "/layout/managesys/usermanage",
+      req_type: "POST",
+      req_data: '{"token": "login","role": "2"}',
+    },
+    {
+      key: "9",
+      name: "admin",
+      role: "管理员",
+      desc: "跳转到用户管理页面",
+      create_time: "2022-04-16 20:24:21",
+      url: "/layout/managesys/usermanage",
+      req_type: "POST",
+      req_data: '{"token": "login","role": "2"}',
+    },
+    {
+      key: "10",
+      name: "admin",
+      role: "管理员",
+      desc: "跳转到用户管理页面",
+      create_time: "2022-04-16 20:24:21",
+      url: "/layout/managesys/usermanage",
+      req_type: "POST",
+      req_data: '{"token": "login","role": "2"}',
+    },
+    {
+      key: "11",
+      name: "admin",
+      role: "管理员",
+      desc: "跳转到用户管理页面",
+      create_time: "2022-04-16 20:24:21",
+      url: "/layout/managesys/usermanage",
+      req_type: "POST",
+      req_data: '{"token": "login","role": "2"}',
+    },
+    
   ];
 
   const columns = [
     {
-      title: "物资名",
-      dataIndex: "good_name",
+      title: "操作用户名",
+      dataIndex: "name",
       key: "name",
     },
     {
-      title: "描述",
+      title: "操作用户角色",
+      dataIndex: "role",
+      key: "role",
+    },
+    {
+      title: "操作描述",
       dataIndex: "desc",
       key: "desc",
     },
     {
-      title: "使用状态",
-      dataIndex: "use_state",
-      key: "use_state",
+      title: "操作时间",
+      dataIndex: "create_time",
+      key: "create_time",
     },
     {
-      title: "提供者姓名",
-      dataIndex: "owner_name",
-      key: "owner_name",
+      title: "URL",
+      dataIndex: "url",
+      key: "url",
     },
     {
-      title: "提供者联系电话",
-      dataIndex: "owner_phone",
-      key: "owner_phone",
+      title: "请求类型",
+      dataIndex: "req_type",
+      key: "req_type",
+    },
+    {
+      title: "请求参数",
+      dataIndex: "req_data",
+      key: "req_data",
     },
 
     {
-      title: "使用者姓名",
-      dataIndex: "user_name",
-      key: "user_name",
-    },
-    {
-      title: "使用者联系电话",
-      dataIndex: "user_phone",
-      key: "user_phone",
-    },
-    {
-      title: "操作",
+      title: "操作结果",
       dataIndex: "options",
       key: "options",
-      width: "12%",
       render: () => (
         <Space size="middle">
-
-          <Button type="primary" onClick={showModalDetails}>
+          <Button type="primary">成功</Button>
+          <Button type="link" onClick={showModalDetails}>
             详情
           </Button>
         </Space>
@@ -90,8 +174,6 @@ function index() {
     },
   ];
   const onSearch = (value) => console.log(value);
-
-
 
   const showModalDetails = () => {
     setVisibleDetails(true);
@@ -111,6 +193,7 @@ function index() {
         enterButton
         style={{ width: 304, marginBottom: 20 }}
       />
+      <RangePicker showTime locale={locale} style={{ marginLeft: 20 }} />
       <Table dataSource={dataSource} columns={columns} />;
       <Modal
         title="物资详情"

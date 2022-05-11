@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Tooltip,
@@ -9,18 +9,35 @@ import {
   Table,
   Form,
   Input,
+  message,
 } from "antd";
 import { HolderOutlined } from "@ant-design/icons";
+import { getUserInfo } from "@/utils/auth";
 // import { getToken, setToken, setRole } from "@/utils/auth";
 // import { login } from "@/api/login";
 import "./index.css";
+import dateFormat from "@/utils/format";
+import { toOrgan } from "@/api/organ";
 
 function index() {
   const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    form.resetFields();
+  });
+  const [form] = Form.useForm();
+  let roleType = {
+    0: "普通用户（非组织）",
+    1: "组织",
+    2: "管理员",
+  };
+  let userInfo = getUserInfo();
+  // 转换成json对象
+  userInfo = JSON.parse(userInfo);
+  const role = userInfo.role;
   const userinfo = {
-    name: "dysh",
-    role: "普通用户（非组织）",
-    create_time: "2022-04-14 20:52:15",
+    name: userInfo.username,
+    role: roleType[userInfo.role],
+    create_time: dateFormat(userInfo.CreateTime),
   };
   const dataSource = [
     {
@@ -72,8 +89,33 @@ function index() {
   const handleCancel = () => {
     setVisible(false);
   };
-  const handleOk = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+  const handleOk = () => {
+    console.log(form.getFieldsValue());
+    form
+      .validateFields()
+      .then((values) => {
+        console.log("Success:", values);
+        let organInfo = form.getFieldsValue();
+        console.log(organInfo);
+        toOrgan({
+          userid: userInfo.id,
+          ...organInfo,
+        })
+          .then((res) => {
+            if (res.msg === "ok") {
+              message.success("申请成功,待管理员审核");
+            } else {
+              message.info(res.message);
+            }
+          })
+          .catch(() => {
+            message.error("申请失败");
+          });
+        setVisible(false);
+      })
+      .catch((errorInfo) => {
+        console.log("Failed:", errorInfo);
+      });
   };
   return (
     <div className="person">
@@ -81,16 +123,18 @@ function index() {
         <Col span={12}>
           <h2>个人信息</h2>
         </Col>
-        <Col span={12}>
-          <div style={{ float: "right" }}>
-            <Button type="primary" onClick={showModal}>
-              成为组织
-            </Button>
-            <Tooltip title="成为组织后能够管理本组织的物资">
-              <HolderOutlined style={{ marginLeft: 5 }} />
-            </Tooltip>
-          </div>
-        </Col>
+        {!role && (
+          <Col span={12}>
+            <div style={{ float: "right" }}>
+              <Button type="primary" onClick={showModal}>
+                成为组织
+              </Button>
+              <Tooltip title="成为组织后能够管理本组织的物资">
+                <HolderOutlined style={{ marginLeft: 5 }} />
+              </Tooltip>
+            </div>
+          </Col>
+        )}
       </Row>
       <p>用户名：{userinfo.name}</p>
       <p>角色：{userinfo.role}</p>
@@ -102,10 +146,16 @@ function index() {
         okText="确认"
         onCancel={handleCancel}
         cancelText="取消"
+        maskClosable={false}
       >
-        <Form name="offerHelpForm" onFinish={handleOk}>
+        <Form
+          form={form}
+          name="offerHelpForm"
+          autoComplete="off"
+          preserve={false}
+        >
           <Form.Item
-            name="organ_name"
+            name="organname"
             label="组织名"
             rules={[
               {
@@ -117,7 +167,7 @@ function index() {
             <Input type="text" />
           </Form.Item>
           <Form.Item
-            name="organ_address"
+            name="organaddress"
             label="组织地址"
             rules={[
               {
@@ -129,7 +179,7 @@ function index() {
             <Input type="text" />
           </Form.Item>
           <Form.Item
-            name="organ_phone"
+            name="organphone"
             label="联系电话"
             rules={[
               {

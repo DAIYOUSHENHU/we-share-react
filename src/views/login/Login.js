@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Card, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { getToken, setToken, setRole } from "@/utils/auth";
+import { getToken, setToken, setRole, setUserInfo } from "@/utils/auth";
 import { login } from "@/api/login";
 import "./Login.css";
 
@@ -28,13 +28,14 @@ export default function Login() {
             message.success("登录成功");
             setToken(res.token);
             setRole(res.role);
+            setUserInfo(res.userInfo);
             navigate("/layout/dashboard");
           } else {
             message.info(res.message);
           }
         })
         .catch(() => {
-          message.error("用户不存在");
+          message.error("用户名或密码错误");
         });
     }
   };

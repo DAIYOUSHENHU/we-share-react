@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { getRole } from "@/utils/auth";
 import { Divider } from "antd";
 
 export default function index() {
-  const [role, setRole] = useState(0);
-  useEffect(() => {
-    setRole(getRole());
-  });
+  useEffect(() => {});
+  let role = getRole();
   return (
     <div>
       <h2>欢迎来到 We Share</h2>
@@ -59,9 +57,7 @@ export default function index() {
             <li>日志管理</li>
             <h1 style={{ marginLeft: 20 }}>查看系统日志信息</h1>
             <li>系统信息</li>
-            <h1 style={{ marginLeft: 20 }}>
-              查看系统信息
-            </h1>
+            <h1 style={{ marginLeft: 20 }}>查看系统信息</h1>
           </ou>
         </>
       )}

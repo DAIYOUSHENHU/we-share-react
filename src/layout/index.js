@@ -40,6 +40,8 @@ export default function index() {
     "/layout/managesys": "7",
     "/layout/managesys/usermanage": "7-1",
     "/layout/managesys/organmanage": "7-2",
+    "/layout/managesys/organmanage/approveorgan": "7-2-1",
+    "/layout/managesys/organmanage/stateorgan": "7-2-2",
     "/layout/managesys/logmanage": "7-3",
     "/layout/managesys/sysinfo": "7-4",
   };
@@ -54,7 +56,9 @@ export default function index() {
     setCollapsed(!collapsed);
   };
   const logout = () => {
+    console.log('11')
     clearToken();
+    navigate("/");
   };
   return (
     <>
@@ -127,12 +131,26 @@ export default function index() {
                 >
                   用户管理
                 </Menu.Item>
-                <Menu.Item
+                {/* <Menu.Item
                   key="7-2"
                   onClick={() => itemChanged("managesys/organmanage")}
                 >
                   组织管理
-                </Menu.Item>
+                </Menu.Item> */}
+                <SubMenu key="7-2" title="组织管理">
+                  <Menu.Item
+                    key="7-2-1"
+                    onClick={() => itemChanged("managesys/organmanage/approveorgan")}
+                  >
+                    组织审核
+                  </Menu.Item>
+                  <Menu.Item
+                    key="7-2-2"
+                    onClick={() => itemChanged("managesys/organmanage/stateorgan")}
+                  >
+                    组织状态管理
+                  </Menu.Item>
+                </SubMenu>
                 <Menu.Item
                   key="7-3"
                   onClick={() => itemChanged("managesys/logmanage")}
@@ -158,7 +176,7 @@ export default function index() {
                 onClick: toggleChanged,
               }
             )}
-            <Button type="danger" className="logout" onClick={() => logout}>
+            <Button type="danger" className="logout" onClick={() => logout()}>
               退出登录
             </Button>
           </Header>

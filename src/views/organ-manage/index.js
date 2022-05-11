@@ -8,72 +8,45 @@ function index() {
   const dataSource = [
     {
       key: "1",
-      good_name: "风扇",
-      desc: "便携小风扇",
-      use_state: "未使用",
-      owner_name: "user1",
-      owner_phone: "18018018010",
-      user_name: "",
-      user_phone: "",
-    },
-    {
-      key: "2",
-      good_name: "饮用水",
-      desc: "	22年4月产的一箱农夫山泉矿泉水",
-      use_state: "未使用",
-      owner_name: "user1",
-      owner_phone: "18018018010",
-      user_name: "",
-      user_phone: "",
-    },
-    {
-      key: "3",
-      good_name: "充电宝",
-      desc: "一个充电宝",
-      use_state: "使用中",
-      owner_name: "user1",
-      owner_phone: "18018018010",
-      user_name: "test1",
-      user_phone: "18180186069",
+      name: "test1",
+      state: "正常",
+      organ_name: "	四川师范大学成龙校区东苑1栋",
+      organ_address: "四川师范大学成龙校区东苑1栋",
+      create_time: "2022-04-15 14:26:58",
     },
   ];
 
   const columns = [
     {
-      title: "物资名",
-      dataIndex: "good_name",
+      title: "组织名",
+      dataIndex: "organ_name",
+      key: "organ_name",
+    },
+    {
+      title: "状态",
+      dataIndex: "state",
+      key: "state",
+    },
+    {
+      title: "组织地址",
+      dataIndex: "organ_address",
+      key: "organ_address",
+    },
+    {
+      title: "联系电话",
+      dataIndex: "organ_name",
+      key: "organ_name",
+    },
+    {
+      title: "用户名",
+      dataIndex: "name",
       key: "name",
-    },
-    {
-      title: "描述",
-      dataIndex: "desc",
-      key: "desc",
-    },
-    {
-      title: "使用状态",
-      dataIndex: "use_state",
-      key: "use_state",
-    },
-    {
-      title: "提供者姓名",
-      dataIndex: "owner_name",
-      key: "owner_name",
-    },
-    {
-      title: "提供者联系电话",
-      dataIndex: "owner_phone",
-      key: "owner_phone",
     },
 
     {
-      title: "使用者姓名",
-      dataIndex: "user_name",
-      key: "user_name",
-    },
-    {
-      title: "使用者联系电话",
-      dataIndex: "user_phone",
-      key: "user_phone",
+      title: "成为组织时间",
+      dataIndex: "create_time",
+      key: "create_time",
     },
     {
       title: "操作",
@@ -119,7 +92,7 @@ function index() {
   return (
     <>
       <Search
-        placeholder="按组织名查找"
+        placeholder="按用户名查找"
         onSearch={onSearch}
         enterButton
         style={{ width: 304, marginBottom: 20 }}
