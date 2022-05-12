@@ -59,13 +59,13 @@ export default function index() {
     },
     {
       title: "所属组织名",
-      dataIndex: "organ_name",
+      dataIndex: "organname",
       key: "organ_name",
     },
 
     {
       title: "所属组织地址",
-      dataIndex: "organ_address",
+      dataIndex: "organaddress",
       key: "organ_address",
       width: "25%",
     },

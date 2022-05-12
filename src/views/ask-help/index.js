@@ -5,40 +5,50 @@ const { Search } = Input;
 import "./index.less";
 import { getUserInfo } from "@/utils/auth";
 import { addAskhelp } from "@/api/askhelp";
+import { getShareGood } from "@/api/good";
 
 export default function index() {
   const [visible, setVisible] = useState(false);
+  const [dataSource, setDataSource] = useState([]);
   useEffect(() => {
     form.resetFields();
-  });
+    getShareGood({}).then((res) => {
+      let good = JSON.parse(res.data);
+      for (let i = 0; i < good.length; i++) {
+        good[i].key = String(i + 1);
+      }
+      setDataSource(good);
+      console.log(good);
+    });
+  },[]);
   const [form] = Form.useForm();
 
   let userInfo = getUserInfo();
   // 转换成json对象
   userInfo = JSON.parse(userInfo);
 
-  const dataSource = [
-    {
-      key: "1",
-      name: "风扇",
-      desc: "便携小风扇",
-      organ_name: "四川师范大学成龙校区东苑1栋",
-      organ_address: "四川师范大学成龙校区东苑1栋",
-    },
-    {
-      key: "2",
-      name: "饮用水",
-      desc: "22年4月产的一箱农夫山泉矿泉水",
-      organ_name: "四川师范大学成龙校区东苑1栋",
-      organ_address: "四川师范大学成龙校区东苑1栋",
-    },
-  ];
+  // const dataSource = [
+  //   {
+  //     key: "1",
+  //     name: "风扇",
+  //     desc: "便携小风扇",
+  //     organ_name: "四川师范大学成龙校区东苑1栋",
+  //     organ_address: "四川师范大学成龙校区东苑1栋",
+  //   },
+  //   {
+  //     key: "2",
+  //     name: "饮用水",
+  //     desc: "22年4月产的一箱农夫山泉矿泉水",
+  //     organ_name: "四川师范大学成龙校区东苑1栋",
+  //     organ_address: "四川师范大学成龙校区东苑1栋",
+  //   },
+  // ];
 
   const columns = [
     {
       title: "物资名",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "goodname",
+      key: "goodname",
     },
     {
       title: "描述",

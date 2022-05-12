@@ -12,18 +12,44 @@ import {
   message,
 } from "antd";
 import { HolderOutlined } from "@ant-design/icons";
-import { getUserInfo } from "@/utils/auth";
-// import { getToken, setToken, setRole } from "@/utils/auth";
-// import { login } from "@/api/login";
 import "./index.css";
+import { getUserInfo } from "@/utils/auth";
 import dateFormat from "@/utils/format";
 import { toOrgan } from "@/api/organ";
+import { getLend, getBorrow } from "@/api/good";
 
 function index() {
   const [visible, setVisible] = useState(false);
+  const [dataSourceLend, setDataSourceLend] = useState([]);
+  const [dataSourceBorrow, setDataSourceBorrow] = useState([]);
   useEffect(() => {
     form.resetFields();
-  });
+    let userInfo = getUserInfo();
+    // 转换成json对象
+    userInfo = JSON.parse(userInfo);
+    getLend({
+      id: userInfo.id,
+    }).then((res) => {
+      let goods = JSON.parse(res.data);
+      for (let i = 0; i < goods.length; i++) {
+        goods[i].key = String(i + 1);
+        goods[i].CreateTime = dateFormat(goods[i].CreateTime);
+      }
+      console.log(goods);
+      setDataSourceLend(goods);
+    });
+    getBorrow({
+      id: userInfo.id,
+    }).then((res) => {
+      let goods = JSON.parse(res.data);
+      for (let i = 0; i < goods.length; i++) {
+        goods[i].key = String(i + 1);
+        goods[i].CreateTime = dateFormat(goods[i].CreateTime);
+      }
+      console.log(goods);
+      setDataSourceBorrow(goods);
+    });
+  }, []);
   const [form] = Form.useForm();
   let roleType = {
     0: "普通用户（非组织）",
@@ -39,47 +65,50 @@ function index() {
     role: roleType[userInfo.role],
     create_time: dateFormat(userInfo.CreateTime),
   };
-  const dataSource = [
-    {
-      key: "1",
-      name: "充电宝",
-      desc: "一个充电宝",
-      organ_name: "四川师范大学成龙校区东苑1栋",
-      organ_address: "四川师范大学成龙校区东苑1栋",
-      organ_phone: "18018018010",
-      create_time: "2022-04-15 21:04:01",
-    },
-  ];
-  const columns = [
+  // const dataSource = [
+  //   {
+  //     key: "1",
+  //     name: "充电宝",
+  //     desc: "一个充电宝",
+  //     organ_name: "四川师范大学成龙校区东苑1栋",
+  //     organ_address: "四川师范大学成龙校区东苑1栋",
+  //     organ_phone: "18018018010",
+  //     create_time: "2022-04-15 21:04:01",
+  //   },
+  // ];
+  const columnslend = [
     {
       title: "物资名",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "goodname",
+      key: "goodname",
     },
     {
       title: "描述",
       dataIndex: "desc",
       key: "desc",
     },
-    {
-      title: "所属组织名",
-      dataIndex: "organ_name",
-      key: "organ_name",
-    },
-    {
-      title: "所属组织地址",
-      dataIndex: "organ_address",
-      key: "organ_address",
-    },
-    {
-      title: "所属组织联系电话",
-      dataIndex: "organ_phone",
-      key: "organ_phone",
-    },
+
     {
       title: "借出时间",
-      dataIndex: "create_time",
-      key: "create_time",
+      dataIndex: "CreateTime",
+      key: "CreateTime",
+    },
+  ];
+  const columnsborrow = [
+    {
+      title: "物资名",
+      dataIndex: "goodname",
+      key: "goodname",
+    },
+    {
+      title: "备注",
+      dataIndex: "note",
+      key: "note",
+    },
+    {
+      title: "借用时间",
+      dataIndex: "CreateTime",
+      key: "CreateTime",
     },
   ];
 
@@ -199,8 +228,8 @@ function index() {
       <Divider />
       <h2>我借出的共享物资</h2>
       <Table
-        dataSource={dataSource}
-        columns={columns}
+        dataSource={dataSourceLend}
+        columns={columnslend}
         scroll={{ y: 350 }}
         style={{ marginTop: "10px" }}
       />
@@ -208,7 +237,8 @@ function index() {
       <Divider />
       <h2>我借用的共享物资</h2>
       <Table
-        columns={columns}
+        dataSource={dataSourceBorrow}
+        columns={columnsborrow}
         scroll={{ y: 350 }}
         style={{ marginTop: "10px" }}
       />

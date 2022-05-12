@@ -97,6 +97,7 @@ function index() {
     console.log(select);
     acceptShare({
       id: select.id,
+      goodid: select.goodid
     })
       .then(() => {
         message.success("操作成功");
@@ -152,8 +153,6 @@ function index() {
           buttonStyle="solid"
         >
           <Radio.Button value="approveing">审核中</Radio.Button>
-          <Radio.Button value="successed">已通过</Radio.Button>
-          <Radio.Button value="failed">已拒绝</Radio.Button>
         </Radio.Group>
       </div>
       <Table dataSource={dataSource} columns={columns} />;

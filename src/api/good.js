@@ -81,3 +81,19 @@ export function refuseShare(data) {
     data
   })
 }
+
+export function getLend(data) {
+  return request({
+    url: '/api/v1/getLend',
+    method: 'post',
+    data
+  })
+}
+
+export function getBorrow(data) {
+  return request({
+    url: '/api/v1/getBorrow',
+    method: 'post',
+    data
+  })
+}

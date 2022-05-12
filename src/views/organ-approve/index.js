@@ -9,6 +9,7 @@ function index() {
   const [visibleReject, setVisibleReject] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [select, setSelect] = useState({});
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     getOrganApproveing({
       organname: "",
@@ -19,8 +20,9 @@ function index() {
       }
       setDataSource(organ);
       console.log(organ);
+      refresh && setTimeout(() => setRefresh(false));
     });
-  }, []);
+  }, [refresh]);
 
   // getOrganApproveing({
   //   organname: ""
@@ -61,8 +63,8 @@ function index() {
     },
     {
       title: "组织地址",
-      dataIndex: "organadress",
-      key: "organadress",
+      dataIndex: "organaddress",
+      key: "organaddress",
     },
     {
       title: "联系电话",
@@ -105,6 +107,7 @@ function index() {
     })
       .then(() => {
         message.success("操作成功");
+        setRefresh(true);
         setVisibleApprove(false);
       })
       .catch(() => {
@@ -129,6 +132,7 @@ function index() {
     })
       .then(() => {
         message.success("操作成功");
+        setRefresh(true);
         setVisibleReject(false);
       })
       .catch(() => {
@@ -143,7 +147,7 @@ function index() {
   return (
     <>
       <Search
-        placeholder="按物品名查找"
+        placeholder="按组织名查找"
         onSearch={onSearch}
         enterButton
         style={{ width: 304, marginBottom: 20 }}
@@ -156,8 +160,6 @@ function index() {
           buttonStyle="solid"
         >
           <Radio.Button value="approveing">审核中</Radio.Button>
-          <Radio.Button value="successed">已通过</Radio.Button>
-          <Radio.Button value="failed">已拒绝</Radio.Button>
         </Radio.Group>
       </div>
       <Table dataSource={dataSource} columns={columns} />;
