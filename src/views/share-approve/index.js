@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Table, Space, Button, Modal, Input, Radio, message } from "antd";
 const { Search } = Input;
 import { getUserInfo } from "@/utils/auth";
-import { getGoodApproveing, acceptGood, refuseGood } from "@/api/good";
+import { getShareApproveing, acceptShare, refuseShare } from "@/api/good";
 function index() {
   const [value, setValue] = useState("approveing");
   const [visibleApprove, setVisibleApprove] = useState(false);
@@ -14,7 +14,7 @@ function index() {
     let userInfo = getUserInfo();
     // 转换成json对象
     userInfo = JSON.parse(userInfo);
-    getGoodApproveing({
+    getShareApproveing({
       id: userInfo.id,
     }).then((res) => {
       let good = JSON.parse(res.data);
@@ -50,14 +50,20 @@ function index() {
       key: "goodname",
     },
     {
-      title: "描述",
-      dataIndex: "desc",
-      key: "desc",
+      title: "申请人",
+      dataIndex: "username",
+      key: "username",
     },
+
     {
       title: "联系电话",
       dataIndex: "userphone",
       key: "userphone",
+    },
+    {
+      title: "备注",
+      dataIndex: "note",
+      key: "note",
     },
     {
       title: "操作",
@@ -89,7 +95,7 @@ function index() {
   };
   const handleOkApprove = () => {
     console.log(select);
-    acceptGood({
+    acceptShare({
       id: select.id,
     })
       .then(() => {
@@ -113,7 +119,7 @@ function index() {
   };
   const handleOkReject = () => {
     console.log(select);
-    refuseGood({
+    refuseShare({
       id: select.id,
     })
       .then(() => {
@@ -159,7 +165,7 @@ function index() {
         okText="确认"
         cancelText="取消"
       >
-        <p>确认接收此物资吗？</p>
+        <p>确认共享此物资吗？</p>
       </Modal>
       <Modal
         title="驳回申请"
@@ -169,7 +175,7 @@ function index() {
         cancelText="取消"
         onCancel={handleCancelReject}
       >
-        <p>确认拒绝此物资吗？</p>
+        <p>确认拒绝此申请吗？</p>
       </Modal>
     </>
   );

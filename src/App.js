@@ -12,6 +12,7 @@ import Offerhelp from "@/views/offer-help";
 import Personnal from "@/views/personal";
 import GoodApprove from "@/views/good-approve";
 import GoodState from "@/views/good-manage";
+import ShareApprove from "@/views/share-approve";
 import SysInfo from "@/views/sys-info";
 import Usermanage from "@/views/user-manage";
 import OrganApprove from "@/views/organ-approve";
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="managegood">
               <Route path="approvegood" element={<GoodApprove />} />
               <Route path="stategood" element={<GoodState />} />
+              <Route path="approveshare" element={<ShareApprove />} />
             </Route>
             <Route path="managesys">
               <Route path="" element={<Navigate to="../usermanage" />} />

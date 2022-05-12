@@ -15,7 +15,7 @@ const { Search } = Input;
 import { getAskhelp } from "@/api/askhelp";
 import { getUserInfo } from "@/utils/auth";
 import { getOrganApproved } from "@/api/organ";
-import { addShareGood } from "@/api/good";
+import { addGood } from "@/api/good";
 export default function index() {
   const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState([]);
@@ -102,7 +102,7 @@ export default function index() {
       .then(() => {
         let good = form.getFieldsValue();
         console.log(good);
-        addShareGood({
+        addGood({
           userid: userInfo.id,
           ...good,
           organid: Number(good.organid)

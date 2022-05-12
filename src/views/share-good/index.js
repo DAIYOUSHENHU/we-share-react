@@ -1,35 +1,55 @@
-import { useState } from "react";
-import { Table, Input, Space, Button, Modal, Form, Radio } from "antd";
+import { useState, useEffect } from "react";
+import { Table, Input, Space, Button, Modal, Form, message } from "antd";
 const { Search } = Input;
+import { getUserInfo } from "@/utils/auth";
+import { getShareGood,addShareGood } from "@/api/good";
 
 export default function index() {
   const [visibleApply, setVisibleApply] = useState(false);
   const [visibleDetails, setVisibleDetails] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [value, setValue] = useState(0);
+  const [dataSource, setDataSource] = useState([]);
+  const [select, setSelect] = useState({});
+  const [refresh, setRefresh] = useState(false);
 
-  const dataSource = [
-    {
-      key: "1",
-      name: "风扇",
-      desc: "便携小风扇",
-      organ_name: "四川师范大学成龙校区东苑1栋",
-      organ_address: "四川师范大学成龙校区东苑1栋",
-    },
-    {
-      key: "2",
-      name: "饮用水",
-      desc: "22年4月产的一箱农夫山泉矿泉水",
-      organ_name: "四川师范大学成龙校区东苑1栋",
-      organ_address: "四川师范大学成龙校区东苑1栋",
-    },
-  ];
+  useEffect(() => {
+    form.resetFields();
+    getShareGood({}).then((res) => {
+      let good = JSON.parse(res.data);
+      for (let i = 0; i < good.length; i++) {
+        good[i].key = String(i + 1);
+      }
+      setDataSource(good);
+      console.log(good);
+    });
+    refresh && setTimeout(() => setRefresh(false));
+  }, [refresh]);
+  const [form] = Form.useForm();
+  let userInfo = getUserInfo();
+  // 转换成json对象
+  userInfo = JSON.parse(userInfo);
+  console.log(userInfo);
+  // const dataSource = [
+  //   {
+  //     key: "1",
+  //     name: "风扇",
+  //     desc: "便携小风扇",
+  //     organ_name: "四川师范大学成龙校区东苑1栋",
+  //     organ_address: "四川师范大学成龙校区东苑1栋",
+  //   },
+  //   {
+  //     key: "2",
+  //     name: "饮用水",
+  //     desc: "22年4月产的一箱农夫山泉矿泉水",
+  //     organ_name: "四川师范大学成龙校区东苑1栋",
+  //     organ_address: "四川师范大学成龙校区东苑1栋",
+  //   },
+  // ];
 
   const columns = [
     {
       title: "物资名",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "goodname",
+      key: "goodname",
     },
     {
       title: "描述",
@@ -54,35 +74,51 @@ export default function index() {
       dataIndex: "options",
       key: "options",
       width: "12%",
-      render: () => (
+      render: (text, row) => (
         <Space size="middle">
-          <Button type="primary" onClick={showModalApply}>
+          <Button type="primary" onClick={() => showModalApply(row)}>
             申请
           </Button>
-          <Button onClick={showModalDetails}>详情</Button>
+          <Button onClick={() => showModalDetails(row)}>详情</Button>
         </Space>
       ),
     },
   ];
   const onSearch = (value) => console.log(value);
 
-  const onFinish = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-  const onChange = (e) => {
-    console.log("radio checked", e.target.value);
-    setValue(e.target.value);
-  };
-
-  const showModalApply = () => {
+  const showModalApply = (row) => {
+    setSelect(row);
     setVisibleApply(true);
   };
   const handleOkApply = () => {
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setVisibleApply(false);
-      setConfirmLoading(false);
-    }, 2000);
+    console.log(select);
+    console.log(form.getFieldsValue());
+    form
+    .validateFields()
+    .then((values) => {
+      console.log("Success:", values);
+      let shareInfo = form.getFieldsValue();
+      console.log(shareInfo);
+      addShareGood({
+        userid: userInfo.id,
+        username: userInfo.username,
+        goodid: select.id,
+        goodname: select.goodname,
+        organid: select.organid,
+        ...shareInfo
+      }).then(() => {
+        message.success("操作成功");
+        setRefresh(true);
+        setVisibleApply(false);
+      })
+      .catch(() => {
+        message.error("操作失败");
+        setVisibleApply(false);
+      });
+    })
+    .catch((errorInfo) => {
+      console.log("Failed:", errorInfo);
+    });
   };
 
   const handleCancelApply = () => {
@@ -93,7 +129,6 @@ export default function index() {
     setVisibleDetails(true);
   };
   const handleOkDetails = () => {
-    setConfirmLoading(true);
     setVisibleDetails(false);
   };
 
@@ -113,14 +148,18 @@ export default function index() {
         title="共享申请"
         visible={visibleApply}
         onOk={handleOkApply}
-        confirmLoading={confirmLoading}
         onCancel={handleCancelApply}
         okText="确认"
         cancelText="取消"
+        maskClosable={false}
       >
-        <Form name="offerHelpForm" onFinish={onFinish}>
+        <Form
+          form={form}
+          name="offerHelpForm"
+          preserve={false}
+        >
           <Form.Item
-            name="phone"
+            name="userphone"
             label="联系电话"
             rules={[
               {
@@ -130,22 +169,6 @@ export default function index() {
             ]}
           >
             <Input type="text" placeholder="请输入联系电话" />
-          </Form.Item>
-
-          <Form.Item
-            name="desc"
-            label="借用类型"
-            rules={[
-              {
-                required: true,
-                message: "请选择借用类型!",
-              },
-            ]}
-          >
-            <Radio.Group onChange={onChange} value={value} defaultValue={value}>
-              <Radio value={0}>暂时借用（七天内归还）</Radio>
-              <Radio value={1}>永久使用</Radio>
-            </Radio.Group>
           </Form.Item>
           <Form.Item name="note" label="备注">
             <Input type="text" placeholder="请输入备注" />

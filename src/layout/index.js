@@ -37,6 +37,7 @@ export default function index() {
     "/layout/managegood": "6",
     "/layout/managegood/approvegood": "6-1",
     "/layout/managegood/stategood": "6-2",
+    "/layout/managegood/approveshare": "6-3",
     "/layout/managesys": "7",
     "/layout/managesys/usermanage": "7-1",
     "/layout/managesys/organmanage": "7-2",
@@ -120,6 +121,12 @@ export default function index() {
                   onClick={() => itemChanged("managegood/stategood")}
                 >
                   物资状态管理
+                </Menu.Item>
+                <Menu.Item
+                  key="6-3"
+                  onClick={() => itemChanged("managegood/approveshare")}
+                >
+                  物资共享审核
                 </Menu.Item>
               </SubMenu>
             )}
