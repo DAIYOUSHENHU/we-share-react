@@ -97,3 +97,20 @@ export function getBorrow(data) {
     data
   })
 }
+	//获取组织物资（管理）
+export function getGood(data) {
+  return request({
+    url: '/good/getGood',
+    method: 'post',
+    data
+  })
+}
+
+	//禁用物资
+  export function banGood(data) {
+    return request({
+      url: '/good/banGood',
+      method: 'post',
+      data
+    })
+  }

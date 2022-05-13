@@ -34,7 +34,12 @@ export default function Login() {
             message.info(res.message);
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          // console.log(err.response)
+          if (err.response.status === 403) {
+            message.error("该用户已被禁用");
+            return
+          }
           message.error("用户名或密码错误");
         });
     }

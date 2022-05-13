@@ -1,48 +1,70 @@
-import { useState } from "react";
-import { Table, Space, Button, Modal, Input } from "antd";
+import { useState, useEffect } from "react";
+import { Table, Space, Button, Modal, Input ,message} from "antd";
 const { Search } = Input;
+import { getUserInfo } from "@/utils/auth";
+import { getGood,banGood } from "@/api/good";
 
 function index() {
   const [visible, setVisible] = useState(false);
-  const [visibleDetails, setVisibleDetails] = useState(false);
-  const dataSource = [
-    {
-      key: "1",
-      good_name: "风扇",
-      desc: "便携小风扇",
-      use_state: "未使用",
-      owner_name: "user1",
-      owner_phone: "18018018010",
-      user_name: "",
-      user_phone: "",
-    },
-    {
-      key: "2",
-      good_name: "饮用水",
-      desc: "	22年4月产的一箱农夫山泉矿泉水",
-      use_state: "未使用",
-      owner_name: "user1",
-      owner_phone: "18018018010",
-      user_name: "",
-      user_phone: "",
-    },
-    {
-      key: "3",
-      good_name: "充电宝",
-      desc: "一个充电宝",
-      use_state: "使用中",
-      owner_name: "user1",
-      owner_phone: "18018018010",
-      user_name: "test1",
-      user_phone: "18180186069",
-    },
-  ];
+  // const [visibleDetails, setVisibleDetails] = useState(false);
+  const [dataSource, setDataSource] = useState([]);
+  const [select, setSelect] = useState({});
+  const [refresh, setRefresh] = useState(false);
+
+  useEffect(() => {
+    let userInfo = getUserInfo();
+    // 转换成json对象
+    userInfo = JSON.parse(userInfo);
+    getGood({
+      id: userInfo.id,
+    }).then((res) => {
+      let good = JSON.parse(res.data);
+      for (let i = 0; i < good.length; i++) {
+        good[i].key = String(i + 1);
+      }
+      setDataSource(good);
+      console.log(good);
+    });
+    refresh && setTimeout(() => setRefresh(false));
+  }, [refresh]);
+  // const dataSource = [
+  //   {
+  //     key: "1",
+  //     good_name: "风扇",
+  //     desc: "便携小风扇",
+  //     use_state: "未使用",
+  //     owner_name: "user1",
+  //     owner_phone: "18018018010",
+  //     user_name: "",
+  //     user_phone: "",
+  //   },
+  //   {
+  //     key: "2",
+  //     good_name: "饮用水",
+  //     desc: "	22年4月产的一箱农夫山泉矿泉水",
+  //     use_state: "未使用",
+  //     owner_name: "user1",
+  //     owner_phone: "18018018010",
+  //     user_name: "",
+  //     user_phone: "",
+  //   },
+  //   {
+  //     key: "3",
+  //     good_name: "充电宝",
+  //     desc: "一个充电宝",
+  //     use_state: "使用中",
+  //     owner_name: "user1",
+  //     owner_phone: "18018018010",
+  //     user_name: "test1",
+  //     user_phone: "18180186069",
+  //   },
+  // ];
 
   const columns = [
     {
       title: "物资名",
-      dataIndex: "good_name",
-      key: "name",
+      dataIndex: "goodname",
+      key: "goodname",
     },
     {
       title: "描述",
@@ -51,71 +73,66 @@ function index() {
     },
     {
       title: "使用状态",
-      dataIndex: "use_state",
-      key: "use_state",
-    },
-    {
-      title: "提供者姓名",
-      dataIndex: "owner_name",
-      key: "owner_name",
+      dataIndex: "state",
+      key: "state",
     },
     {
       title: "提供者联系电话",
-      dataIndex: "owner_phone",
-      key: "owner_phone",
-    },
-
-    {
-      title: "使用者姓名",
-      dataIndex: "user_name",
-      key: "user_name",
-    },
-    {
-      title: "使用者联系电话",
-      dataIndex: "user_phone",
-      key: "user_phone",
+      dataIndex: "userphone",
+      key: "userphone",
     },
     {
       title: "操作",
       dataIndex: "options",
       key: "options",
       width: "12%",
-      render: () => (
+      render: (text, row) => (
         <Space size="middle">
-          <Button type="danger" onClick={showModal}>
+          <Button type="danger" onClick={() => showModal(row)}>
             禁用
           </Button>
-          <Button type="primary" onClick={showModalDetails}>
+          {/* <Button type="primary" onClick={() => showModalDetails(row)}>
             详情
-          </Button>
+          </Button> */}
         </Space>
       ),
     },
   ];
   const onSearch = (value) => console.log(value);
-  const showModal = () => {
+  const showModal = (row) => {
+    setSelect(row);
     setVisible(true);
   };
   const handleOk = () => {
-    setTimeout(() => {
-      setVisible(false);
-    }, 2000);
+    console.log(select);
+    banGood({
+      id: select.id,
+    })
+      .then(() => {
+        message.success("操作成功");
+        setRefresh(true);
+        setVisible(false);
+      })
+      .catch(() => {
+        message.error("操作失败");
+        setVisible(false);
+      });
   };
 
   const handleCancel = () => {
     setVisible(false);
   };
 
-  const showModalDetails = () => {
-    setVisibleDetails(true);
-  };
-  const handleOkDetails = () => {
-    setVisibleDetails(false);
-  };
+  // const showModalDetails = () => {
+  //   setVisibleDetails(true);
+  // };
+  // const handleOkDetails = () => {
+  //   setVisibleDetails(false);
+  // };
 
-  const handleCancelDetails = () => {
-    setVisibleDetails(false);
-  };
+  // const handleCancelDetails = () => {
+  //   setVisibleDetails(false);
+  // };
   return (
     <>
       <Search
@@ -136,7 +153,7 @@ function index() {
         <p>确认禁用此物资吗？</p>
         <p>禁用后，其他用户将不能查看到此物资信息</p>
       </Modal>
-      <Modal
+      {/* <Modal
         title="物资详情"
         visible={visibleDetails}
         onOk={handleOkDetails}
@@ -176,7 +193,7 @@ function index() {
         <p>
           开始使用时间：<span>2022-04-16 10:35:31</span>
         </p>
-      </Modal>
+      </Modal> */}
     </>
   );
 }
