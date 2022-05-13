@@ -2,10 +2,16 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Card, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { getToken, setToken, setRole, setUserInfo } from "@/utils/auth";
+import {
+  getToken,
+  setToken,
+  setRole,
+  getUserInfo,
+  setUserInfo,
+} from "@/utils/auth";
+import { addLog } from "@/api/login";
 import { login } from "@/api/login";
 import "./Login.css";
-
 import bgImage from "@/assets/images/bg.gif";
 
 export default function Login() {
@@ -29,6 +35,18 @@ export default function Login() {
             setToken(res.token);
             setRole(res.role);
             setUserInfo(res.userInfo);
+            let userInfo = getUserInfo();
+            // 转换成json对象
+            userInfo = JSON.parse(userInfo);
+            addLog({
+              userid: userInfo.id,
+              username: userInfo.username,
+              role: userInfo.role,
+              desc: "用户登录",
+              reqtype: 'POST',
+            }).then((res) => {
+              console.log(res);
+            });
             navigate("/layout/dashboard");
           } else {
             message.info(res.message);
@@ -38,7 +56,7 @@ export default function Login() {
           // console.log(err.response)
           if (err.response.status === 403) {
             message.error("该用户已被禁用");
-            return
+            return;
           }
           message.error("用户名或密码错误");
         });

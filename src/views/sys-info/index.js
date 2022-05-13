@@ -10,15 +10,13 @@ function index() {
   const [share, setShare] = useState(0);
 
   useEffect(() => {
-
     sysInfo().then((res) => {
       let date = JSON.parse(res.data);
-      setUser(date.usertotal)
-      setOrgan(date.organtotal)
-      setGood(date.goodtotal)
-      setShare(date.sharetotal)
+      setUser(date.usertotal);
+      setOrgan(date.organtotal);
+      setGood(date.goodtotal);
+      setShare(date.sharetotal);
     });
-
   }, []);
 
   return (
@@ -39,7 +37,7 @@ function index() {
       </Row>
       <Divider />
       <Row>
-      <Col span={12}>
+        <Col span={12}>
           <Statistic title="已有物资总数" value={good} />
         </Col>
         <Col span={12}>

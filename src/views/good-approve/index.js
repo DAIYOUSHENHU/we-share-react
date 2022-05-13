@@ -3,6 +3,8 @@ import { Table, Space, Button, Modal, Input, Radio, message } from "antd";
 const { Search } = Input;
 import { getUserInfo } from "@/utils/auth";
 import { getGoodApproveing, acceptGood, refuseGood } from "@/api/good";
+import { addLog } from "@/api/login";
+
 function index() {
   const [value, setValue] = useState("approveing");
   const [visibleApprove, setVisibleApprove] = useState(false);
@@ -14,6 +16,14 @@ function index() {
     let userInfo = getUserInfo();
     // 转换成json对象
     userInfo = JSON.parse(userInfo);
+    addLog({
+      userid: userInfo.id,
+      username: userInfo.username,
+      role: userInfo.role,
+      desc: "跳转到物资审核页面",
+    }).then((res) => {
+      console.log(res);
+    });
     getGoodApproveing({
       id: userInfo.id,
     }).then((res) => {
@@ -94,6 +104,18 @@ function index() {
     })
       .then(() => {
         message.success("操作成功");
+        let userInfo = getUserInfo();
+        // 转换成json对象
+        userInfo = JSON.parse(userInfo);
+        addLog({
+          userid: userInfo.id,
+          username: userInfo.username,
+          role: userInfo.role,
+          desc: "接收物资",
+          reqtype: "POST",
+        }).then((res) => {
+          console.log(res);
+        });
         setRefresh(true);
         setVisibleApprove(false);
       })
@@ -117,6 +139,18 @@ function index() {
       id: select.id,
     })
       .then(() => {
+        let userInfo = getUserInfo();
+        // 转换成json对象
+        userInfo = JSON.parse(userInfo);
+        addLog({
+          userid: userInfo.id,
+          username: userInfo.username,
+          role: userInfo.role,
+          desc: "拒绝物资",
+          reqtype: 'POST',
+        }).then((res) => {
+          console.log(res);
+        });
         message.success("操作成功");
         setRefresh(true);
         setVisibleReject(false);

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Table, Space, Button, Modal, Input ,message} from "antd";
+import { Table, Space, Button, Modal, Input, message } from "antd";
 const { Search } = Input;
 import { getUserInfo } from "@/utils/auth";
-import { getGood,banGood } from "@/api/good";
-
+import { getGood, banGood } from "@/api/good";
+import { addLog } from "@/api/login";
 function index() {
   const [visible, setVisible] = useState(false);
   // const [visibleDetails, setVisibleDetails] = useState(false);
@@ -15,6 +15,14 @@ function index() {
     let userInfo = getUserInfo();
     // 转换成json对象
     userInfo = JSON.parse(userInfo);
+    addLog({
+      userid: userInfo.id,
+      username: userInfo.username,
+      role: userInfo.role,
+      desc: "跳转到物资状态管理页面",
+    }).then((res) => {
+      console.log(res);
+    });
     getGood({
       id: userInfo.id,
     }).then((res) => {
@@ -109,6 +117,18 @@ function index() {
       id: select.id,
     })
       .then(() => {
+        let userInfo = getUserInfo();
+        // 转换成json对象
+        userInfo = JSON.parse(userInfo);
+        addLog({
+          userid: userInfo.id,
+          username: userInfo.username,
+          role: userInfo.role,
+          desc: "禁用物资",
+          reqtype: "POST",
+        }).then((res) => {
+          console.log(res);
+        });
         message.success("操作成功");
         setRefresh(true);
         setVisible(false);

@@ -3,6 +3,7 @@ import { Table, Space, Button, Modal, Input, Radio, message } from "antd";
 const { Search } = Input;
 import { getUserInfo } from "@/utils/auth";
 import { getShareApproveing, acceptShare, refuseShare } from "@/api/good";
+import { addLog } from "@/api/login";
 function index() {
   const [value, setValue] = useState("approveing");
   const [visibleApprove, setVisibleApprove] = useState(false);
@@ -14,6 +15,14 @@ function index() {
     let userInfo = getUserInfo();
     // 转换成json对象
     userInfo = JSON.parse(userInfo);
+    addLog({
+      userid: userInfo.id,
+      username: userInfo.username,
+      role: userInfo.role,
+      desc: "跳转到物资共享审核页面",
+    }).then((res) => {
+      console.log(res);
+    });
     getShareApproveing({
       id: userInfo.id,
     }).then((res) => {
@@ -97,9 +106,21 @@ function index() {
     console.log(select);
     acceptShare({
       id: select.id,
-      goodid: select.goodid
+      goodid: select.goodid,
     })
       .then(() => {
+        let userInfo = getUserInfo();
+        // 转换成json对象
+        userInfo = JSON.parse(userInfo);
+        addLog({
+          userid: userInfo.id,
+          username: userInfo.username,
+          role: userInfo.role,
+          desc: "同意物资共享",
+          reqtype: "POST",
+        }).then((res) => {
+          console.log(res);
+        });
         message.success("操作成功");
         setRefresh(true);
         setVisibleApprove(false);
@@ -124,6 +145,18 @@ function index() {
       id: select.id,
     })
       .then(() => {
+        let userInfo = getUserInfo();
+        // 转换成json对象
+        userInfo = JSON.parse(userInfo);
+        addLog({
+          userid: userInfo.id,
+          username: userInfo.username,
+          role: userInfo.role,
+          desc: "拒绝物资共享",
+          reqtype: "POST",
+        }).then((res) => {
+          console.log(res);
+        });
         message.success("操作成功");
         setRefresh(true);
         setVisibleReject(false);

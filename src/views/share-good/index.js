@@ -2,16 +2,27 @@ import { useState, useEffect } from "react";
 import { Table, Input, Space, Button, Modal, Form, message } from "antd";
 const { Search } = Input;
 import { getUserInfo } from "@/utils/auth";
-import { getShareGood,addShareGood } from "@/api/good";
-
+import { getShareGood, addShareGood } from "@/api/good";
+import { addLog } from "@/api/login";
 export default function index() {
   const [visibleApply, setVisibleApply] = useState(false);
-  const [visibleDetails, setVisibleDetails] = useState(false);
+  // const [visibleDetails, setVisibleDetails] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [select, setSelect] = useState({});
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
+    let userInfo = getUserInfo();
+    // 转换成json对象
+    userInfo = JSON.parse(userInfo);
+    addLog({
+      userid: userInfo.id,
+      username: userInfo.username,
+      role: userInfo.role,
+      desc: "跳转到共享物资页面",
+    }).then((res) => {
+      console.log(res);
+    });
     form.resetFields();
     getShareGood({}).then((res) => {
       let good = JSON.parse(res.data);
@@ -79,7 +90,7 @@ export default function index() {
           <Button type="primary" onClick={() => showModalApply(row)}>
             申请
           </Button>
-          <Button onClick={() => showModalDetails(row)}>详情</Button>
+          {/* <Button onClick={() => showModalDetails(row)}>详情</Button> */}
         </Space>
       ),
     },
@@ -94,47 +105,60 @@ export default function index() {
     console.log(select);
     console.log(form.getFieldsValue());
     form
-    .validateFields()
-    .then((values) => {
-      console.log("Success:", values);
-      let shareInfo = form.getFieldsValue();
-      console.log(shareInfo);
-      addShareGood({
-        userid: userInfo.id,
-        username: userInfo.username,
-        goodid: select.id,
-        goodname: select.goodname,
-        organid: select.organid,
-        ...shareInfo
-      }).then(() => {
-        message.success("操作成功");
-        setRefresh(true);
-        setVisibleApply(false);
+      .validateFields()
+      .then((values) => {
+        console.log("Success:", values);
+        let shareInfo = form.getFieldsValue();
+        console.log(shareInfo);
+        addShareGood({
+          userid: userInfo.id,
+          username: userInfo.username,
+          goodid: select.id,
+          goodname: select.goodname,
+          organid: select.organid,
+          ...shareInfo,
+        })
+          .then(() => {
+            let userInfo = getUserInfo();
+            // 转换成json对象
+            userInfo = JSON.parse(userInfo);
+            addLog({
+              userid: userInfo.id,
+              username: userInfo.username,
+              role: userInfo.role,
+              desc: "发起物资共享申请",
+              reqtype: "POST",
+            }).then((res) => {
+              console.log(res);
+            });
+            message.success("操作成功");
+            setRefresh(true);
+            setVisibleApply(false);
+          })
+          .catch(() => {
+            message.error("操作失败");
+            setVisibleApply(false);
+          });
       })
-      .catch(() => {
-        message.error("操作失败");
-        setVisibleApply(false);
+      .catch((errorInfo) => {
+        console.log("Failed:", errorInfo);
       });
-    })
-    .catch((errorInfo) => {
-      console.log("Failed:", errorInfo);
-    });
   };
 
   const handleCancelApply = () => {
     setVisibleApply(false);
   };
 
-  const showModalDetails = () => {
-    setVisibleDetails(true);
-  };
-  const handleOkDetails = () => {
-    setVisibleDetails(false);
-  };
+  // const showModalDetails = () => {
+  //   setVisibleDetails(true);
+  // };
+  // const handleOkDetails = () => {
+  //   setVisibleDetails(false);
+  // };
 
-  const handleCancelDetails = () => {
-    setVisibleDetails(false);
-  };
+  // const handleCancelDetails = () => {
+  //   setVisibleDetails(false);
+  // };
   return (
     <div>
       <Search
@@ -153,11 +177,7 @@ export default function index() {
         cancelText="取消"
         maskClosable={false}
       >
-        <Form
-          form={form}
-          name="offerHelpForm"
-          preserve={false}
-        >
+        <Form form={form} name="offerHelpForm" preserve={false}>
           <Form.Item
             name="userphone"
             label="联系电话"
@@ -175,7 +195,7 @@ export default function index() {
           </Form.Item>
         </Form>
       </Modal>
-      <Modal
+      {/* <Modal
         title="物资详情"
         visible={visibleDetails}
         onOk={handleOkDetails}
@@ -206,7 +226,7 @@ export default function index() {
         <p>
           物资加入系统时间：<span>2022-04-15 21:07:22</span>
         </p>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

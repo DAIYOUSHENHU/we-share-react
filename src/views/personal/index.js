@@ -17,7 +17,7 @@ import { getUserInfo } from "@/utils/auth";
 import dateFormat from "@/utils/format";
 import { toOrgan } from "@/api/organ";
 import { getLend, getBorrow } from "@/api/good";
-
+import { addLog } from "@/api/login";
 function index() {
   const [visible, setVisible] = useState(false);
   const [dataSourceLend, setDataSourceLend] = useState([]);
@@ -27,6 +27,14 @@ function index() {
     let userInfo = getUserInfo();
     // 转换成json对象
     userInfo = JSON.parse(userInfo);
+    addLog({
+      userid: userInfo.id,
+      username: userInfo.username,
+      role: userInfo.role,
+      desc: "跳转到个人中心页面",
+    }).then((res) => {
+      console.log(res);
+    });
     getLend({
       id: userInfo.id,
     }).then((res) => {
@@ -132,6 +140,18 @@ function index() {
         })
           .then((res) => {
             if (res.msg === "ok") {
+              let userInfo = getUserInfo();
+              // 转换成json对象
+              userInfo = JSON.parse(userInfo);
+              addLog({
+                userid: userInfo.id,
+                username: userInfo.username,
+                role: userInfo.role,
+                desc: "请求成为组织",
+                reqtype: 'POST',
+              }).then((res) => {
+                console.log(res);
+              });
               message.success("申请成功,待管理员审核");
             } else {
               message.info(res.message);

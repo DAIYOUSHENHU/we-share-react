@@ -1,9 +1,23 @@
 import { useEffect } from "react";
 import { getRole } from "@/utils/auth";
 import { Divider } from "antd";
+import { getUserInfo } from "@/utils/auth";
+import { addLog } from "@/api/login";
 
 export default function index() {
-  useEffect(() => {});
+  useEffect(() => {
+    let userInfo = getUserInfo();
+    // 转换成json对象
+    userInfo = JSON.parse(userInfo);
+    addLog({
+      userid: userInfo.id,
+      username: userInfo.username,
+      role: userInfo.role,
+      desc: '跳转到首页'
+    }).then((res) => {
+      console.log(res);
+    });
+  },[]);
   let role = getRole();
   return (
     <div>

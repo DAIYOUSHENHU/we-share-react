@@ -14,6 +14,7 @@ import {} from "@ant-design/icons";
 const { Search } = Input;
 import { getAskhelp } from "@/api/askhelp";
 import { getUserInfo } from "@/utils/auth";
+import { addLog } from "@/api/login";
 import { getOrganApproved } from "@/api/organ";
 import { addGood } from "@/api/good";
 export default function index() {
@@ -23,6 +24,17 @@ export default function index() {
   // const [organs, setOrgans] = useState();
 
   useEffect(() => {
+    let userInfo = getUserInfo();
+    // 转换成json对象
+    userInfo = JSON.parse(userInfo);
+    addLog({
+      userid: userInfo.id,
+      username: userInfo.username,
+      role: userInfo.role,
+      desc: "跳转到提供帮助页面",
+    }).then((res) => {
+      console.log(res);
+    });
     getAskhelp({}).then((res) => {
       let askhelp = JSON.parse(res.data);
       for (let i = 0; i < askhelp.length; i++) {
@@ -109,6 +121,18 @@ export default function index() {
         })
           .then((res) => {
             if (res.msg === "ok") {
+              let userInfo = getUserInfo();
+              // 转换成json对象
+              userInfo = JSON.parse(userInfo);
+              addLog({
+                userid: userInfo.id,
+                username: userInfo.username,
+                role: userInfo.role,
+                desc: "提供物资",
+                reqtype: 'POST',
+              }).then((res) => {
+                console.log(res);
+              });
               message.success("提交成功");
             } else {
               message.info(res.message);

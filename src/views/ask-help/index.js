@@ -6,11 +6,14 @@ import "./index.less";
 import { getUserInfo } from "@/utils/auth";
 import { addAskhelp } from "@/api/askhelp";
 import { getShareGood } from "@/api/good";
-
+import { addLog } from "@/api/login";
 export default function index() {
   const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   useEffect(() => {
+    let userInfo = getUserInfo();
+    // 转换成json对象
+    userInfo = JSON.parse(userInfo);
     form.resetFields();
     getShareGood({}).then((res) => {
       let good = JSON.parse(res.data);
@@ -20,7 +23,15 @@ export default function index() {
       setDataSource(good);
       console.log(good);
     });
-  },[]);
+    addLog({
+      userid: userInfo.id,
+      username: userInfo.username,
+      role: userInfo.role,
+      desc: "跳转到请求帮助页面",
+    }).then((res) => {
+      console.log(res);
+    });
+  }, []);
   const [form] = Form.useForm();
 
   let userInfo = getUserInfo();
@@ -57,8 +68,8 @@ export default function index() {
     },
     {
       title: "所属组织地址",
-      dataIndex: "organ_address",
-      key: "organ_address",
+      dataIndex: "organaddress",
+      key: "organaddress",
     },
   ];
   const showDrawer = () => {
@@ -82,6 +93,18 @@ export default function index() {
         })
           .then((res) => {
             if (res.msg === "ok") {
+              let userInfo = getUserInfo();
+              // 转换成json对象
+              userInfo = JSON.parse(userInfo);
+              addLog({
+                userid: userInfo.id,
+                username: userInfo.username,
+                role: userInfo.role,
+                desc: "发布请求帮助",
+                reqtype: 'POST',
+              }).then((res) => {
+                console.log(res);
+              });
               message.success("提交成功");
             } else {
               message.info(res.message);
